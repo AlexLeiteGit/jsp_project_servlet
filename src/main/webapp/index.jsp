@@ -14,6 +14,8 @@
 
 <form action="ServletLoginController" method="post">
 
+<input type="hidden" value="<%= request.getParameter("url") %>" name="url">
+
 <input name="login" type="text">
 <input name="senha" type="password">
 

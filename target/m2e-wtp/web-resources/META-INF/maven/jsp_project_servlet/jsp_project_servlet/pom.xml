@@ -6,6 +6,18 @@
   <packaging>war</packaging>
   <name>jsp_project_servlet</name>
   <description>JSP project old school with servlet</description>
+  
+  <dependencies>
+  
+	<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+	<dependency>
+		<groupId>org.postgresql</groupId>
+		<artifactId>postgresql</artifactId>
+		<version>9.4.1212</version>
+	</dependency>
+  
+  </dependencies>
+  
   <build>
     <plugins>
       <plugin>

@@ -10,10 +10,13 @@ import model.ModelLogin;
 
 import java.io.IOException;
 
-@WebServlet("/ServletLoginController")/*Mapeamento da URL que vem da tela*/
+import dao.DAOLoginRepository;
+
+@WebServlet(urlPatterns={"/ServletLoginController", "/main/ServletLoginController"})/*Mapeamento da URL que vem da tela*/
 public class ServletLoginController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	
+	private DAOLoginRepository daoLoginRepository = new DAOLoginRepository();    
 
     public ServletLoginController() {
         
@@ -33,6 +36,9 @@ public class ServletLoginController extends HttpServlet {
 		
 		String login = request.getParameter("login");
 		String senha = request.getParameter("senha");
+		String url = request.getParameter("url");
+		
+		try {
 		
 		if(login != null && !login.isEmpty() && senha != null && !senha.isEmpty()) {
 		
@@ -44,16 +50,23 @@ public class ServletLoginController extends HttpServlet {
 			System.out.println(modelLogin.getLogin());
 			System.out.println(modelLogin.getSenha());
 			
-			if(modelLogin.getLogin().equalsIgnoreCase("admin") && modelLogin.getSenha().equalsIgnoreCase("admin")){
+			//Simulação de validação do LOGIN
+			if(daoLoginRepository.validarAutenticacao(modelLogin)){
 			
 				request.getSession().setAttribute("usuario", modelLogin.getLogin());
 				
-				RequestDispatcher redirecionar = request.getRequestDispatcher("main/main.jsp");
+				if(url == null || url.equals("null")) {
+					
+					url = "/main/main.jsp";
+					
+				}
+				
+				RequestDispatcher redirecionar = request.getRequestDispatcher(url);
 				redirecionar.forward(request, response);
 				
 			} else {
 				
-				RequestDispatcher redirecionar = request.getRequestDispatcher("index.jsp");
+				RequestDispatcher redirecionar = request.getRequestDispatcher("/index.jsp");
 				request.setAttribute("msg", "Informa o login e  senha novamente");
 				redirecionar.forward(request, response);
 				
@@ -66,6 +79,10 @@ public class ServletLoginController extends HttpServlet {
 			request.setAttribute("msg", "Informe o login e senha novamente!");
 			redirecionar.forward(request, response);
 			
+		}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 	}
