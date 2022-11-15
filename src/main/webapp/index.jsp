@@ -12,14 +12,16 @@
 
 <% out.println("OUTRO TESTE DE CONTEÚDO"); %>
 
-<form action="receber-nome.jsp">
+<form action="ServletLoginController" method="post">
 
-<input name="nome">
-<input name="idade">
+<input name="login" type="text">
+<input name="senha" type="password">
 
 <input type="submit" value="ENVIAR">
 
 </form>
+
+<h3> ${msg}</h3>
 
 </body>
 </html>
