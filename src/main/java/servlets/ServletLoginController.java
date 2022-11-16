@@ -26,8 +26,22 @@ public class ServletLoginController extends HttpServlet {
 	 * goGet = RECEBE OS DADOS PELA URL EM PARÂMETROS
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Voltando para o doPost() através do retorno do método doGet()");
-		doPost(request, response);
+		
+		String acao = request.getParameter("acao");//parâmetro que será analisado para realização de determinada tarefa.
+		
+		if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("logout")) {
+			
+			System.out.println("Logout realizado com sucesso.");
+			request.getSession().invalidate();//invalida a sessão e encerra o usuário
+			RequestDispatcher redirecionar = request.getRequestDispatcher("index.jsp");
+			redirecionar.forward(request, response);
+			
+		} else {
+			
+			System.out.println("Voltando para o doPost() através do retorno do métdo doGet()");
+			doPost(request, response);
+			
+		}
 	}
 
 	/**
