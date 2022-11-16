@@ -26,7 +26,8 @@ public class ServletLoginController extends HttpServlet {
 	 * goGet = RECEBE OS DADOS PELA URL EM PARÂMETROS
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		System.out.println("Voltando para o doPost() através do retorno do método doGet()");
+		doPost(request, response);
 	}
 
 	/**
@@ -83,6 +84,9 @@ public class ServletLoginController extends HttpServlet {
 		
 		} catch (Exception e) {
 			e.printStackTrace();
+			RequestDispatcher redirecionar = request.getRequestDispatcher("erro.jsp");
+			request.setAttribute("msg", e.getMessage());
+			redirecionar.forward(request, response);
 		}
 		
 	}
