@@ -37,8 +37,13 @@
                                     <div class="card">
                                     <div class="card-header">
                                    	<div class="card-block">
+                                    
                                     <h4 class="sub-title">Cadastro de Usuários</h4>
-                                    <form class="form-material" action="<%= request.getContextPath()%>/ServletUsuarioController" method="post">
+                                    
+                                    <form class="form-material" action="<%= request.getContextPath()%>/ServletUsuarioController" method="post" id="formUser">
+                                    
+                                    <input type="hidden" name="acao" value="">
+                                    
                                     	<div class="form-group form-default form-static-label">
                                             <input type="text" name="id" id="id" class="form-control" readonly="readonly" value="${modelLogin.id}">
                                             <span class="form-bar"></span>
@@ -65,19 +70,20 @@
                                             <label class="float-label">Email:</label>
                                         </div>
                                         
-                                        <button class="btn btn-out-dashed waves-effect waves-light btn-primary btn-square">Novo</button>
+                                        <button class="btn btn-out-dashed waves-effect waves-light btn-primary btn-square" onclick="limparForm();">Novo</button>
             							<button class="btn btn-out-dashed waves-effect waves-light btn-success btn-square">Salvar</button>
-            							<button class="btn btn-out-dashed waves-effect waves-light btn-info btn-square">Info Button</button>
-            							<button class="btn btn-out-dashed waves-effect waves-light btn-warning btn-square">Warning Button</button>
+            							<button class="btn btn-out-dashed waves-effect waves-light btn-info btn-square" onclick="criarDelete()">Excluir com Post</button>
+            							<button class="btn btn-out-dashed waves-effect waves-light btn-warning btn-square" onclick="criarDeleteComAjax()">Excluir com Ajax</button>
             							<button class="btn btn-out-dashed waves-effect waves-light btn-danger btn-square">Danger Button</button>
             							<button class="btn btn-out-dashed waves-effect waves-light btn-inverse btn-square">Inverse Button</button>
 
                                       </form>
+                                      
                                       </div>
                                       </div>
                                       </div>
                                       
-                                      <span>${msg}</span>
+                                      <span id="msg">${msg}</span>
                                     
                                     <!-- Page-body end -->
                                 </div>
@@ -91,11 +97,60 @@
     </div>
     <!-- Warning Section Starts -->
     
-    <h4>Mas nada será para agora neste momento.</h4>
-    
     <!-- Warning Section Ends -->
     
     <jsp:include page="/layouts/javascriptFile.jsp"></jsp:include>
+    
+<script type="text/javascript">
+
+	<!-- Método de Limpar o formulário-->
+	function limparForm(){
+			var elementos = document.getElementById("formUser").elements; /*retorna os elementos html dentro do form*/
+			
+			for (var p = 0; p < elementos.length; p++) {
+				elementos[p].value = '';
+			}
+		}
+	
+	<!-- Método de deletar o usuário com Post-->
+	function criarDelete() {
+		
+		if(confirm('Deseja realmente excluir?')){
+			var form = document.getElementById("formUser");
+			form.method = 'get';
+			document.getElementById("acao").value = 'deletar';
+			form.submit();				
+		}
+	}
+	
+	<!-- Método de deletar o usuário com Ajax-->
+	function criarDeleteComAjax(){
+		
+		if(confirm('Deseja realmente excluir?')){
+			
+			var urlAction = document.getElementById('formUser').action;
+			var idUser = document.getElementById('id').value;
+			
+			$.ajax({
+				
+				method: "get",
+				url : urlAction,
+				data : "id=" + idUser + '&acao=deletarAjax',
+				success: function (response){
+					
+				limparForm();
+				document.getElementById('msg').textContent = response;	
+					
+				}
+				
+			}).fail(function(xhr, status, errorThrown){
+				alert('Erro ao deletar usuário por ID: ' + xhr.responseText);
+			});
+		}
+		
+	}
+
+</script>
     
 </body>
 

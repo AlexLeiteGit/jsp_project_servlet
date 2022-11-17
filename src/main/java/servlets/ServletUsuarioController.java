@@ -26,7 +26,38 @@ public class ServletUsuarioController extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+	
+		try {
+			String acao = request.getParameter("acao");/*parâmetro hidden que criamos dentro do formulário*/
+			
+			if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletar")) {
+				String idUser = request.getParameter("id");
+				daoUsuarioRepository.deletarUsuario(idUser);
+				request.setAttribute("msg", "usuário EXCLUÍDO COM SUCESSO!!!");
+				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
+				
+			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarAjax")) {
+				
+				String idUser = request.getParameter("id");
+				daoUsuarioRepository.deletarUsuario(idUser);
+				
+				response.getWriter().write("usuário EXCLUÍDO COM SUCESSO!!!");
+			
+			} else {
+				
+				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
+			
+			}
+			
+			} catch (Exception e) {
+				
+				e.printStackTrace();
+				RequestDispatcher redirecionar = request.getRequestDispatcher("erro.jsp");
+				request.setAttribute("msg", e.getMessage());
+				redirecionar.forward(request, response);
+			
+			}
+
 	}
 
 

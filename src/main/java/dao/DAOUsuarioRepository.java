@@ -68,6 +68,21 @@ public class DAOUsuarioRepository {
 		
 	}
 	
+	//Método de Confirmação de Deletar usuário
+	public void deletarUsuario(String idUser) throws Exception {
+		
+		String sql = "DELETE FROM model_login WHERE id = ?;";
+		
+		PreparedStatement statement = connection.prepareStatement(sql);
+		
+		statement.setLong(1, Long.parseLong(idUser));
+		
+		statement.executeUpdate();
+		
+		connection.commit();
+		
+	}
+	
 	//1º Método de Consulta de Usuário.
 	public ModelLogin consultaUsuarioPrimeira(String login) throws SQLException {
 		
