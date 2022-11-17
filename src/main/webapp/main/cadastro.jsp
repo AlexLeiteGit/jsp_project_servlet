@@ -8,5 +8,7 @@
 </head>
 <body>
 
+<h1>Página de Cadastro de Usuário</h1>
+
 </body>
 </html>

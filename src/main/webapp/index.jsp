@@ -130,7 +130,7 @@ a:hover{
 </div>
     
 <p> Não tem uma conta?
-<a href='https://cdpn.io/pen/debug/MWXYweL?authentication_hash=vWMRwoeLOzer'> Cadastre-se </a>
+<a href='main/cadastro.jsp'> Cadastre-se </a>
 </p>
 
 </form>

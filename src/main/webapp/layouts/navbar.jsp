@@ -115,7 +115,7 @@
                                       </a>
                                   </li>
                                   <li class="waves-effect waves-light">
-                                      <a href="ServletLoginController?acao=logout">
+                                      <a href="<%= request.getContextPath()%>/ServletLoginController?acao=logout">
                                           <i class="ti-layout-sidebar-left"></i> Logout
                                       </a>
                                   </li>

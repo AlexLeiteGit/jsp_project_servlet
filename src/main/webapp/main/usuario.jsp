@@ -34,24 +34,50 @@
                                 <div class="page-wrapper">
                                     <!-- Page-body start -->
                                     
-                                    <div class="page-body">
-                                        <div class="row">
-                                        
-                                        <h1>Cadastro de Usuários</h1>
-                                            
-                                        <form action="">
-                                            
-                                          <div class="form-group row">
-                                          <label class="col-sm-2 col-form-label">Simple Input</label>
-                                          <div class="col-sm-10">
-                                          <input type="text" class="form-control">
-                                          </div>
-                                          </div>
-     
-                                       </form>
-                                            
+                                    <div class="card">
+                                    <div class="card-header">
+                                   	<div class="card-block">
+                                    <h4 class="sub-title">Cadastro de Usuários</h4>
+                                    <form class="form-material" action="<%= request.getContextPath()%>/ServletUsuarioController" method="post">
+                                    	<div class="form-group form-default form-static-label">
+                                            <input type="text" name="id" id="id" class="form-control" readonly="readonly" value="${modelLogin.id}">
+                                            <span class="form-bar"></span>
+                                            <label class="float-label">Id:</label>
                                         </div>
-                                    </div>
+                                        <div class="form-group form-default form-static-label">
+                                            <input type="text" name="login" id="login" class="form-control" required="requered" autocomplete="off" value="${modelLogin.login}">
+                                            <span class="form-bar"></span>
+                                            <label class="float-label">Login:</label>
+                                        </div>
+                                        <div class="form-group form-default form-static-label">
+                                            <input type="text" name="nome" id="nome" class="form-control" required="requered" value="${modelLogin.nome}">
+                                            <span class="form-bar"></span>
+                                            <label class="float-label">Nome:</label>
+                                        </div>
+                                        <div class="form-group form-default form-static-label">
+                                        	<input type="password" name="senha" id="senha" class="form-control" required="requered" autocomplete="off" value="${modelLogin.senha}">
+                                       		<span class="form-bar"></span>
+                                          	<label class="float-label">Senha:</label>
+                                        </div>
+                                        <div class="form-group form-default form-static-label">
+                                            <input type="email" name="email" id="email" name="email" id="email" class="form-control" required="requered" autocomplete="off" value="${modelLogin.email}">
+                                            <span class="form-bar"></span>
+                                            <label class="float-label">Email:</label>
+                                        </div>
+                                        
+                                        <button class="btn btn-out-dashed waves-effect waves-light btn-primary btn-square">Novo</button>
+            							<button class="btn btn-out-dashed waves-effect waves-light btn-success btn-square">Salvar</button>
+            							<button class="btn btn-out-dashed waves-effect waves-light btn-info btn-square">Info Button</button>
+            							<button class="btn btn-out-dashed waves-effect waves-light btn-warning btn-square">Warning Button</button>
+            							<button class="btn btn-out-dashed waves-effect waves-light btn-danger btn-square">Danger Button</button>
+            							<button class="btn btn-out-dashed waves-effect waves-light btn-inverse btn-square">Inverse Button</button>
+
+                                      </form>
+                                      </div>
+                                      </div>
+                                      </div>
+                                      
+                                      <span>${msg}</span>
                                     
                                     <!-- Page-body end -->
                                 </div>
