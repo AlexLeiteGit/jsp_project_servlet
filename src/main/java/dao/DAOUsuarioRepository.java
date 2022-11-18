@@ -158,5 +158,32 @@ public class DAOUsuarioRepository {
 		return modelLogin;
 	}
 	
+	//4º Método de Consulta - Consulta de Usuários por JSTL
+	public List<ModelLogin> consultaUsuarioListJstl() throws Exception{
+		
+		List<ModelLogin> retorno = new ArrayList<ModelLogin>();
+		
+		String sql = "select * from model_login ";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		
+		ResultSet resultado = statement.executeQuery();
+		
+		while(resultado.next()){
+			
+			ModelLogin modelLogin = new ModelLogin();
+			
+			modelLogin.setEmail(resultado.getString("email"));
+			modelLogin.setId(resultado.getLong("id"));
+			modelLogin.setLogin(resultado.getString("login"));
+			modelLogin.setNome(resultado.getString("nome"));
+			modelLogin.setSenha(resultado.getString("senha"));
+			
+			retorno.add(modelLogin);
+			
+		}
+		
+		return retorno;		
+	}
+	
 
 }

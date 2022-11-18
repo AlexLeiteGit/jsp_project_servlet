@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dao.DAOUsuarioRepository;
 
-
+@WebServlet(urlPatterns = {"/ServletUsuarioController"})
 public class ServletUsuarioController extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
@@ -36,7 +36,11 @@ public class ServletUsuarioController extends HttpServlet {
 			if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletar")) {
 				String idUser = request.getParameter("id");
 				daoUsuarioRepository.deletarUsuario(idUser);
-				request.setAttribute("msg", "usuário EXCLUÍDO COM SUCESSO!!!");
+				
+				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl();
+				request.setAttribute("modelLogins", modelLogins);
+				
+				request.setAttribute("msg", "USUÁRIO EXCLUÍDO COM SUCESSO");
 				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
 				
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarAjax")) {
@@ -44,7 +48,10 @@ public class ServletUsuarioController extends HttpServlet {
 				String idUser = request.getParameter("id");
 				daoUsuarioRepository.deletarUsuario(idUser);
 				
-				response.getWriter().write("usuário EXCLUÍDO COM SUCESSO!!!");
+				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl();
+				request.setAttribute("modelLogins", modelLogins);
+				
+				response.getWriter().write("USUÁRIO EXCLUÍDO COM SUCESSO");
 			
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("buscarUsuarioAjax")) {
 				
@@ -63,12 +70,25 @@ public class ServletUsuarioController extends HttpServlet {
 				
 				ModelLogin modelLogin = daoUsuarioRepository.consultaUsuarioID(id);
 				
+				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl();
+				request.setAttribute("modelLogins", modelLogins);
+				
 				request.setAttribute("msg", "USUÁRIO EM EDIÇÃO");
 				request.setAttribute("modelLogin", modelLogin);
 				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
 			
+			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listarUser")) {
+				
+				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl();
+				
+				request.setAttribute("msg", "USUÁRIO CARREGADOS");
+				request.setAttribute("modelLogins", modelLogins);
+				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
+				
 			} else {
 				
+				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl();
+				request.setAttribute("modelLogins", modelLogins);
 				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
 			
 			}
@@ -117,6 +137,9 @@ public class ServletUsuarioController extends HttpServlet {
 			}
 			modelLogin = daoUsuarioRepository.gravarUsuario(modelLogin);
 		}
+		
+		List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl();
+		request.setAttribute("modelLogins", modelLogins);
 		
 		RequestDispatcher redirecionar = request.getRequestDispatcher("main/usuario.jsp");
 		request.setAttribute("msg", "Operação Realizada com Sucesso!");
