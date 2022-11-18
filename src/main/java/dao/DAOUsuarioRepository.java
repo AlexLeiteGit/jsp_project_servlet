@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import connection.SingleConnectionBanco;
 import model.ModelLogin;
@@ -104,5 +106,57 @@ public class DAOUsuarioRepository {
 		
 		return modelLogin;
 	}
+	
+	//2º Método de Consulta - Consulta do Botão Buscar do Modal
+	public List<ModelLogin> consultaUsuarioList(String nome) throws Exception{
+		
+		List<ModelLogin> retorno = new ArrayList<ModelLogin>();
+		
+		String sql = "select * from model_login where upper(nome) like upper(?) ";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, "%" + nome + "%");/*Os % são utilizados por causa do operador LIKE*/
+		
+		ResultSet resultado = statement.executeQuery();
+		
+		while(resultado.next()){
+			
+			ModelLogin modelLogin = new ModelLogin();
+			
+			modelLogin.setEmail(resultado.getString("email"));/*O retorno vem das colunas do banco de dados*/
+			modelLogin.setId(resultado.getLong("id"));
+			modelLogin.setLogin(resultado.getString("login"));
+			modelLogin.setNome(resultado.getString("nome"));
+			//modelLogin.setSenha(resultado.getString("senha"));/*deixar de mostrar a senha por uma questão de segurança*/
+			
+			retorno.add(modelLogin);
+			
+		}
+		
+		return retorno;		
+	}
+	
+	//3º Método de Consulta - Consulta de Usuário por ID dentro do  Botão detalhar do Modal
+	public ModelLogin consultaUsuarioID(String id) throws Exception {
+		
+		ModelLogin modelLogin = new ModelLogin();
+		
+		String sql = "select * from model_login where id = ?";
+		
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setLong(1, Long.parseLong(id));
+				
+		ResultSet resultSet = statement.executeQuery();
+		
+		while(resultSet.next()) {
+			modelLogin.setId(resultSet.getLong("id"));
+			modelLogin.setEmail(resultSet.getString("email"));
+			modelLogin.setLogin(resultSet.getString("login"));
+			modelLogin.setSenha(resultSet.getString("senha"));
+			modelLogin.setNome(resultSet.getString("nome"));
+		}
+		
+		return modelLogin;
+	}
+	
 
 }

@@ -74,6 +74,7 @@
             							<button class="btn btn-out-dashed waves-effect waves-light btn-success btn-square">Salvar</button>
             							<button class="btn btn-out-dashed waves-effect waves-light btn-info btn-square" onclick="criarDelete()">Excluir com Post</button>
             							<button class="btn btn-out-dashed waves-effect waves-light btn-warning btn-square" onclick="criarDeleteComAjax()">Excluir com Ajax</button>
+            							<button type="button" class="btn btn-out-dashed waves-effect waves-light btn-danger btn-square" data-toggle="modal" data-target="#ModalConsultaUsuario">Pesquisar</button>
             							<button class="btn btn-out-dashed waves-effect waves-light btn-danger btn-square">Danger Button</button>
             							<button class="btn btn-out-dashed waves-effect waves-light btn-inverse btn-square">Inverse Button</button>
 
@@ -100,6 +101,55 @@
     <!-- Warning Section Ends -->
     
     <jsp:include page="/layouts/javascriptFile.jsp"></jsp:include>
+    
+    <!-- Começo do Modal -->
+    
+	<div class="modal fade" id="ModalConsultaUsuario" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">Pesquisa de Usuário</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        	<div class="input-group mb-3">
+  					<input type="text" class="form-control" placeholder="Nome do Usuário" aria-label="nome" id="nomeBusca" aria-describedby="basic-addon2">
+  					<div class="input-group-append">
+    					<button class="btn btn-outline-secondary" type="button" onclick="buscarUsuario();">Buscar</button>
+  					</div>
+				</div>
+				
+				<div style="height: 300px; overflow: scroll">
+				<table class="table" id="tabelaResultados">
+  					<thead>
+    					<tr>
+      						<th scope="col">#ID</th>
+     						<th scope="col">Nome</th>
+      						<th scope="col">E-mail</th>
+      						<th scope="col">Detalhe</th>
+    					</tr>
+  					</thead>
+  				<tbody>
+
+  				</tbody>
+				</table>
+				</div>
+				
+				<div>
+				<span id="totalResultadosBusca"></span>
+				</div>
+				
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+     <!-- Final do Modal -->
     
 <script type="text/javascript">
 
@@ -147,6 +197,50 @@
 				alert('Erro ao deletar usuário por ID: ' + xhr.responseText);
 			});
 		}
+		
+	}
+	
+	<!-- Método de Busca de usuários com Ajax através do Modal -->
+	function buscarUsuario(){
+		
+		var nomeBusca = document.getElementById('nomeBusca').value;
+		
+		if(nomeBusca != null && nomeBusca !='' && nomeBusca.trim() != ''){
+		
+		var urlAction = document.getElementById('formUser').action;
+
+		$.ajax({
+				
+				method: "get",
+				url : urlAction,
+				data : "nomeBusca=" + nomeBusca + '&acao=buscarUsuarioAjax',
+				success: function (response){
+					
+					var json = JSON.parse(response);
+					
+					$('#tabelaResultados > tbody > tr').remove();
+					
+					for(var p = 0 ; p < json.length ; p++){
+						$('#tabelaResultados > tbody').append('<tr><td>' + json[p].id + '</td> <td>' + json[p].nome + '</td> <td>' + json[p].email + '</td> <td><button onclick="buscarParaEditar(' +json[p].id+ ')" class="btn btn-out-dashed waves-effect waves-light btn-danger btn-square">Detalhe</button></td></tr>');
+					}	
+					
+					document.getElementById('totalResultadosBusca').textContent = 'Resultados: ' + json.length;
+					
+				}
+				
+			}).fail(function(xhr, status, errorThrown){
+				alert('Erro ao buscar usuário pelo nome: ' + xhr.responseText);
+			});
+		}
+		
+	}
+	
+	<!-- Método de Carregar Usuário do Modal para Edição -->
+	function buscarParaEditar(id){
+		
+		var urlAction = document.getElementById('formUser').action;
+		
+		window.location.href = urlAction + '?acao=buscarEditar&id=' + id;
 		
 	}
 
