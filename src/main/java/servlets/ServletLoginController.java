@@ -11,12 +11,14 @@ import model.ModelLogin;
 import java.io.IOException;
 
 import dao.DAOLoginRepository;
+import dao.DAOUsuarioRepository;
 
 @WebServlet(urlPatterns={"/ServletLoginController", "/main/ServletLoginController"})/*Mapeamento da URL que vem da tela*/
 public class ServletLoginController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private DAOLoginRepository daoLoginRepository = new DAOLoginRepository();    
+	private DAOLoginRepository daoLoginRepository = new DAOLoginRepository();
+	private DAOUsuarioRepository daoUsuarioRepository = new DAOUsuarioRepository();
 
     public ServletLoginController() {
         
@@ -68,7 +70,10 @@ public class ServletLoginController extends HttpServlet {
 			//Simulação de validação do LOGIN
 			if(daoLoginRepository.validarAutenticacao(modelLogin)){
 			
+				modelLogin = daoUsuarioRepository.consultaUsuarioLogado(login);
+
 				request.getSession().setAttribute("usuario", modelLogin.getLogin());
+				request.getSession().setAttribute("isAdmin", modelLogin.getUserAdmin());
 				
 				if(url == null || url.equals("null")) {
 					
