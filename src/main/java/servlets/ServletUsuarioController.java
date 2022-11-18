@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.DAOUsuarioRepository;
 
 @WebServlet(urlPatterns = {"/ServletUsuarioController"})
-public class ServletUsuarioController extends HttpServlet {
+public class ServletUsuarioController extends ServletGenericUtil {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -37,7 +37,7 @@ public class ServletUsuarioController extends HttpServlet {
 				String idUser = request.getParameter("id");
 				daoUsuarioRepository.deletarUsuario(idUser);
 				
-				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl();
+				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
 				request.setAttribute("modelLogins", modelLogins);
 				
 				request.setAttribute("msg", "USUÁRIO EXCLUÍDO COM SUCESSO");
@@ -48,7 +48,7 @@ public class ServletUsuarioController extends HttpServlet {
 				String idUser = request.getParameter("id");
 				daoUsuarioRepository.deletarUsuario(idUser);
 				
-				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl();
+				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
 				request.setAttribute("modelLogins", modelLogins);
 				
 				response.getWriter().write("USUÁRIO EXCLUÍDO COM SUCESSO");
@@ -57,7 +57,7 @@ public class ServletUsuarioController extends HttpServlet {
 				
 				String nomeBusca = request.getParameter("nomeBusca");
 				
-				List<ModelLogin> dadosJsonUser = daoUsuarioRepository.consultaUsuarioList(nomeBusca);
+				List<ModelLogin> dadosJsonUser = daoUsuarioRepository.consultaUsuarioList(nomeBusca, super.getUserLogado(request));
 				
 				ObjectMapper mapper = new ObjectMapper();
 				String json = mapper.writeValueAsString(dadosJsonUser);
@@ -68,9 +68,9 @@ public class ServletUsuarioController extends HttpServlet {
 				
 				String id = request.getParameter("id");
 				
-				ModelLogin modelLogin = daoUsuarioRepository.consultaUsuarioID(id);
+				ModelLogin modelLogin = daoUsuarioRepository.consultaUsuarioID(id, super.getUserLogado(request));
 				
-				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl();
+				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
 				request.setAttribute("modelLogins", modelLogins);
 				
 				request.setAttribute("msg", "USUÁRIO EM EDIÇÃO");
@@ -79,7 +79,7 @@ public class ServletUsuarioController extends HttpServlet {
 			
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listarUser")) {
 				
-				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl();
+				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
 				
 				request.setAttribute("msg", "USUÁRIO CARREGADOS");
 				request.setAttribute("modelLogins", modelLogins);
@@ -87,7 +87,7 @@ public class ServletUsuarioController extends HttpServlet {
 				
 			} else {
 				
-				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl();
+				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
 				request.setAttribute("modelLogins", modelLogins);
 				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
 			
@@ -135,10 +135,10 @@ public class ServletUsuarioController extends HttpServlet {
 			} else {
 				msg = "Usuário Atualizado com Sucesso!";
 			}
-			modelLogin = daoUsuarioRepository.gravarUsuario(modelLogin);
+			modelLogin = daoUsuarioRepository.gravarUsuario(modelLogin, super.getUserLogado(request));
 		}
 		
-		List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl();
+		List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
 		request.setAttribute("modelLogins", modelLogins);
 		
 		RequestDispatcher redirecionar = request.getRequestDispatcher("main/usuario.jsp");

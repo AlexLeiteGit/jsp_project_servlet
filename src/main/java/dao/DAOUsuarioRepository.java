@@ -31,18 +31,19 @@ public class DAOUsuarioRepository {
 	}
 	
 	//Método para GRAVAR e ATUALIZAR o usuário no BD
-	public ModelLogin gravarUsuario(ModelLogin modelLogin) throws SQLException {
+	public ModelLogin gravarUsuario(ModelLogin modelLogin, Long userLogado) throws SQLException {
 		
 		//Método de gravar usuário
 		if(modelLogin.isNovo() == true) {
 		
-		String sql = "INSERT INTO model_login(login, senha, nome, email) VALUES (?, ?, ?, ?);";
+		String sql = "INSERT INTO model_login(login, senha, nome, email, usuario_id) VALUES (?, ?, ?, ?, ?);";
 		
 		PreparedStatement preparedSql = connection.prepareStatement(sql);
 		preparedSql.setString(1, modelLogin.getLogin());
 		preparedSql.setString(2, modelLogin.getSenha());
 		preparedSql.setString(3, modelLogin.getNome());
 		preparedSql.setString(4, modelLogin.getEmail());
+		preparedSql.setLong(5, userLogado);
 		
 		preparedSql.execute();
 		
@@ -66,14 +67,14 @@ public class DAOUsuarioRepository {
 			
 		}
 		
-		return this.consultaUsuarioPrimeira(modelLogin.getLogin());
+		return this.consultaUsuarioPrimeira(modelLogin.getLogin(), userLogado);
 		
 	}
 	
 	//Método de Confirmação de Deletar usuário
 	public void deletarUsuario(String idUser) throws Exception {
 		
-		String sql = "DELETE FROM model_login WHERE id = ?;";
+		String sql = "DELETE FROM model_login WHERE id = ? and useradmin is false;";
 		
 		PreparedStatement statement = connection.prepareStatement(sql);
 		
@@ -86,11 +87,11 @@ public class DAOUsuarioRepository {
 	}
 	
 	//1º Método de Consulta de Usuário.
-	public ModelLogin consultaUsuarioPrimeira(String login) throws SQLException {
+	public ModelLogin consultaUsuarioPrimeira(String login, Long userLogado) throws SQLException {
 		
 		ModelLogin modelLogin = new ModelLogin();
 		
-		String sql = "select * from model_login where upper(login) = upper('"+login+"');";
+		String sql = "select * from model_login where upper(login) = upper('"+login+"') and useradmin is false and usuario_id = ;" + userLogado;
 		
 		PreparedStatement statement = connection.prepareStatement(sql);
 		
@@ -108,13 +109,14 @@ public class DAOUsuarioRepository {
 	}
 	
 	//2º Método de Consulta - Consulta do Botão Buscar do Modal
-	public List<ModelLogin> consultaUsuarioList(String nome) throws Exception{
+	public List<ModelLogin> consultaUsuarioList(String nome, Long userLogado) throws Exception{
 		
 		List<ModelLogin> retorno = new ArrayList<ModelLogin>();
 		
-		String sql = "select * from model_login where upper(nome) like upper(?) ";
+		String sql = "select * from model_login where upper(nome) like upper(?) and useradmin is false and usuario_id = ?";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setString(1, "%" + nome + "%");/*Os % são utilizados por causa do operador LIKE*/
+		statement.setLong(2, userLogado);
 		
 		ResultSet resultado = statement.executeQuery();
 		
@@ -136,15 +138,16 @@ public class DAOUsuarioRepository {
 	}
 	
 	//3º Método de Consulta - Consulta de Usuário por ID dentro do  Botão detalhar do Modal
-	public ModelLogin consultaUsuarioID(String id) throws Exception {
+	public ModelLogin consultaUsuarioID(String id, Long userLogado) throws Exception {
 		
 		ModelLogin modelLogin = new ModelLogin();
 		
-		String sql = "select * from model_login where id = ?";
+		String sql = "select * from model_login where id = ? and useradmin is false and usuario_id = ?";
 		
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setLong(1, Long.parseLong(id));
-				
+		statement.setLong(2, userLogado);
+		
 		ResultSet resultSet = statement.executeQuery();
 		
 		while(resultSet.next()) {
@@ -159,11 +162,11 @@ public class DAOUsuarioRepository {
 	}
 	
 	//4º Método de Consulta - Consulta de Usuários por JSTL
-	public List<ModelLogin> consultaUsuarioListJstl() throws Exception{
+	public List<ModelLogin> consultaUsuarioListJstl(Long userLogado) throws Exception{
 		
 		List<ModelLogin> retorno = new ArrayList<ModelLogin>();
 		
-		String sql = "select * from model_login ";
+		String sql = "select * from model_login where useradmin is false and usuario_id = " + userLogado;
 		PreparedStatement statement = connection.prepareStatement(sql);
 		
 		ResultSet resultado = statement.executeQuery();
@@ -183,6 +186,50 @@ public class DAOUsuarioRepository {
 		}
 		
 		return retorno;		
+	}
+	
+	//5º Método de Consulta - Consulta no ServletGenericUtil
+	public ModelLogin consultaUsuario(String login) throws Exception {
+		
+		ModelLogin modelLogin = new ModelLogin();
+		
+		String sql = "select * from model_login where upper(login) = upper('"+login+"') and useradmin is false";
+		
+		PreparedStatement statement = connection.prepareStatement(sql);
+				
+		ResultSet resultSet = statement.executeQuery();
+		
+		while(resultSet.next()) {
+			modelLogin.setId(resultSet.getLong("id"));
+			modelLogin.setEmail(resultSet.getString("email"));
+			modelLogin.setLogin(resultSet.getString("login"));
+			modelLogin.setSenha(resultSet.getString("senha"));
+			modelLogin.setNome(resultSet.getString("nome"));
+		}
+		
+		return modelLogin;
+	}
+	
+	//6º Método de Consulta - Consulta no ServletGenericUtil o userLogado
+	public ModelLogin consultaUsuarioLogado(String login) throws Exception {
+		
+		ModelLogin modelLogin = new ModelLogin();
+		
+		String sql = "select * from model_login where upper(login) = upper('"+login+"')";
+		
+		PreparedStatement statement = connection.prepareStatement(sql);
+				
+		ResultSet resultSet = statement.executeQuery();
+		
+		while(resultSet.next()) {
+			modelLogin.setId(resultSet.getLong("id"));
+			modelLogin.setEmail(resultSet.getString("email"));
+			modelLogin.setLogin(resultSet.getString("login"));
+			modelLogin.setSenha(resultSet.getString("senha"));
+			modelLogin.setNome(resultSet.getString("nome"));
+		}
+		
+		return modelLogin;
 	}
 	
 
