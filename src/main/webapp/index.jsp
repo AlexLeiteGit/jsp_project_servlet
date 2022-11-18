@@ -67,13 +67,14 @@ color: red;
 }
 
 hr{
-top: 60%
+top: 30%
 margin-top: 10%;
-margin-bottom: 10%;
+margin-bottom: 0%;
 width: 80%;
 }
 
 p{
+top: 65%
 color: #003A4D;
 font-size: 14pt;
 text-align: center;

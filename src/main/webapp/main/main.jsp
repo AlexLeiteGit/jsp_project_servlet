@@ -37,19 +37,15 @@
                                         <div class="row">
                                             <!-- task, page, download counter  start -->
                                             
-                                            <div><h1>Conteúdo das Páginas do Systema.</h1></div>
+                                            <h1>Conteúdo das Páginas do Sistema. Iremos implementar depois uma funcionalidade principal. Provavelmente será o consumo de uma API gratuíta.</h1>
                                             
                                             <!-- task, page, download counter  end -->
     
-                                            <!--  sale analytics start -->
-                                            
-                                            <div><h2>Iremos implementar depois uma funcionalidade principal.</h2></div>                                        
+                                            <!--  sale analytics start -->                                       
 
                                             <!--  sale analytics end -->
     
                                             <!--  project and team member start -->
-                                            
-                                            <div><h3>Provavelmente será o comsumo de uma API gratuíta.</h3></div>
                                             
                                             <!--  project and team member end -->
                                         </div>
@@ -65,8 +61,6 @@
         </div>
     </div>
     <!-- Warning Section Starts -->
-    
-    <h4>Mas nada será para agora neste momento.</h4>
     
     <!-- Warning Section Ends -->
     
