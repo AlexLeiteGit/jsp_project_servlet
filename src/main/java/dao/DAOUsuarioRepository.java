@@ -31,12 +31,12 @@ public class DAOUsuarioRepository {
 	}
 	
 	//Método para GRAVAR e ATUALIZAR o usuário no BD
-	public ModelLogin gravarUsuario(ModelLogin modelLogin, Long userLogado) throws SQLException {
+	public ModelLogin gravarUsuario(ModelLogin modelLogin, Long userLogado) throws Exception {
 		
 		//Método de gravar usuário
-		if(modelLogin.isNovo() == true) {
+		if(modelLogin.isNovo()) {
 		
-		String sql = "INSERT INTO model_login(login, senha, nome, email, usuario_id) VALUES (?, ?, ?, ?, ?);";
+		String sql = "INSERT INTO model_login(login, senha, nome, email, usuario_id, perfil) VALUES (?, ?, ?, ?, ?, ?);";
 		
 		PreparedStatement preparedSql = connection.prepareStatement(sql);
 		preparedSql.setString(1, modelLogin.getLogin());
@@ -44,15 +44,16 @@ public class DAOUsuarioRepository {
 		preparedSql.setString(3, modelLogin.getNome());
 		preparedSql.setString(4, modelLogin.getEmail());
 		preparedSql.setLong(5, userLogado);
+		preparedSql.setString(6, modelLogin.getPerfil());
 		
 		preparedSql.execute();
 		
 		connection.commit();/*Salva os dados*/
 		
 		//Método de atualizar usuário
-		} else if(modelLogin.isNovo() == false) {
+		} else {
 			
-			String sql = "UPDATE model_login SET login=?, senha=?, nome=?, email=? WHERE id = "+modelLogin.getId()+";";
+			String sql = "UPDATE model_login SET login=?, senha=?, nome=?, email=?, perfil=? WHERE id = "+modelLogin.getId()+";";
 			
 			PreparedStatement statement = connection.prepareStatement(sql);
 			
@@ -60,6 +61,7 @@ public class DAOUsuarioRepository {
 			statement.setString(2, modelLogin.getSenha());
 			statement.setString(3, modelLogin.getNome());
 			statement.setString(4, modelLogin.getEmail());
+			statement.setString(5, modelLogin.getPerfil());
 			
 			statement.executeUpdate();
 			
@@ -87,11 +89,11 @@ public class DAOUsuarioRepository {
 	}
 	
 	//1º Método de Consulta de Usuário.
-	public ModelLogin consultaUsuarioPrimeira(String login, Long userLogado) throws SQLException {
+	public ModelLogin consultaUsuarioPrimeira(String login, Long userLogado) throws Exception {
 		
 		ModelLogin modelLogin = new ModelLogin();
 		
-		String sql = "select * from model_login where upper(login) = upper('"+login+"') and useradmin is false and usuario_id = ;" + userLogado;
+		String sql = "select * from model_login where upper(login) = upper('"+login+"') and useradmin is false and usuario_id = " + userLogado;
 		
 		PreparedStatement statement = connection.prepareStatement(sql);
 		
@@ -103,6 +105,7 @@ public class DAOUsuarioRepository {
 			modelLogin.setLogin(resultSet.getString("login"));
 			modelLogin.setSenha(resultSet.getString("senha"));
 			modelLogin.setNome(resultSet.getString("nome"));
+			modelLogin.setPerfil(resultSet.getString("perfil")); 
 		}
 		
 		return modelLogin;
@@ -129,6 +132,7 @@ public class DAOUsuarioRepository {
 			modelLogin.setLogin(resultado.getString("login"));
 			modelLogin.setNome(resultado.getString("nome"));
 			//modelLogin.setSenha(resultado.getString("senha"));/*deixar de mostrar a senha por uma questão de segurança*/
+			modelLogin.setPerfil(resultado.getString("perfil"));
 			
 			retorno.add(modelLogin);
 			
@@ -156,6 +160,7 @@ public class DAOUsuarioRepository {
 			modelLogin.setLogin(resultSet.getString("login"));
 			modelLogin.setSenha(resultSet.getString("senha"));
 			modelLogin.setNome(resultSet.getString("nome"));
+			modelLogin.setPerfil(resultSet.getString("perfil"));
 		}
 		
 		return modelLogin;
@@ -180,6 +185,7 @@ public class DAOUsuarioRepository {
 			modelLogin.setLogin(resultado.getString("login"));
 			modelLogin.setNome(resultado.getString("nome"));
 			modelLogin.setSenha(resultado.getString("senha"));
+			modelLogin.setPerfil(resultado.getString("perfil"));
 			
 			retorno.add(modelLogin);
 			
@@ -205,6 +211,7 @@ public class DAOUsuarioRepository {
 			modelLogin.setLogin(resultSet.getString("login"));
 			modelLogin.setSenha(resultSet.getString("senha"));
 			modelLogin.setNome(resultSet.getString("nome"));
+			modelLogin.setPerfil(resultSet.getString("perfil"));
 		}
 		
 		return modelLogin;
@@ -228,6 +235,7 @@ public class DAOUsuarioRepository {
 			modelLogin.setSenha(resultSet.getString("senha"));
 			modelLogin.setNome(resultSet.getString("nome"));
 			modelLogin.setUserAdmin(resultSet.getBoolean("useradmin"));
+			modelLogin.setPerfil(resultSet.getString("perfil"));
 		}
 		
 		return modelLogin;

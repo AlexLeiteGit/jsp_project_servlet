@@ -1,3 +1,4 @@
+<%@page import="model.ModelLogin"%>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
@@ -51,21 +52,45 @@
                                             <span class="form-bar"></span>
                                             <label class="float-label">Id:</label>
                                         </div>
-                                        <div class="form-group form-default form-static-label">
-                                            <input type="text" name="login" id="login" class="form-control" required="requered" autocomplete="off" value="${modelLogin.login}">
-                                            <span class="form-bar"></span>
-                                            <label class="float-label">Login:</label>
-                                        </div>
+
+										<div class="form-group form-default form-static-label">
+										 	<select class="form-control" name="perfil">
+												
+												<option disabled="disabled">[SELECIONE O PERFIL DESEJADO]</option>
+												
+												<option value="ADMIN">ADMIN</option>
+												
+												<option value="SECRETARIA">SECRETARIA</option>
+												
+												<option value="AUXILIAR">AUXILIAR</option>
+												
+												<option value="ANALISTA">ANALISTA</option>
+												
+												<option value="ESPECIALISTA">ESPECIALISTA</option>
+												</select>
+												
+												<span class="form-bar"></span>
+												<label class="float-label">Perfil:</label>
+												</div>
+
+												<div class="form-group form-default form-static-label">
+                                            	<input type="text" name="login" id="login" class="form-control" required="requered" autocomplete="off" value="${modelLogin.login}">
+                                           		<span class="form-bar"></span>
+                                            	<label class="float-label">Login:</label>
+                                        		</div>
+                                        
                                         <div class="form-group form-default form-static-label">
                                             <input type="text" name="nome" id="nome" class="form-control" required="requered" value="${modelLogin.nome}">
                                             <span class="form-bar"></span>
                                             <label class="float-label">Nome:</label>
                                         </div>
+                                        
                                         <div class="form-group form-default form-static-label">
                                         	<input type="password" name="senha" id="senha" class="form-control" required="requered" autocomplete="off" value="${modelLogin.senha}">
                                        		<span class="form-bar"></span>
                                           	<label class="float-label">Senha:</label>
                                         </div>
+                                        
                                         <div class="form-group form-default form-static-label">
                                             <input type="email" name="email" id="email" name="email" id="email" class="form-control" required="requered" autocomplete="off" value="${modelLogin.email}">
                                             <span class="form-bar"></span>
