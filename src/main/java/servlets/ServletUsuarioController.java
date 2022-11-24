@@ -1,19 +1,17 @@
 package servlets;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import model.ModelLogin;
-
 import java.io.IOException;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dao.DAOUsuarioRepository;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import model.ModelLogin;
 
 @WebServlet(urlPatterns = {"/ServletUsuarioController"})
 public class ServletUsuarioController extends ServletGenericUtil {
@@ -34,26 +32,37 @@ public class ServletUsuarioController extends ServletGenericUtil {
 			String acao = request.getParameter("acao");/*parâmetro hidden que criamos dentro do formulário*/
 			
 			if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletar")) {
+				
+				System.out.println("Inicio do ServletUsuarioController - deletar!");
+				
 				String idUser = request.getParameter("id");
 				daoUsuarioRepository.deletarUsuario(idUser);
 				
-				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
-				request.setAttribute("modelLogins", modelLogins);
+				List<ModelLogin> listaModel = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
+				request.setAttribute("listaModel", listaModel);
 				
 				request.setAttribute("msg", "USUÁRIO EXCLUÍDO COM SUCESSO");
 				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
 				
+				System.out.println("Fim do ServletUsuarioController - deletar!");
+				
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarAjax")) {
+				
+				System.out.println("Inicio do ServletUsuarioController - deletarAjax!");
 				
 				String idUser = request.getParameter("id");
 				daoUsuarioRepository.deletarUsuario(idUser);
 				
-				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
-				request.setAttribute("modelLogins", modelLogins);
+				List<ModelLogin> listaModel = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
+				request.setAttribute("listaModel", listaModel);
 				
 				response.getWriter().write("USUÁRIO EXCLUÍDO COM SUCESSO");
+				
+				System.out.println("Fim do ServletUsuarioController - deletarAjax!");
 			
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("buscarUsuarioAjax")) {
+				
+				System.out.println("Inicio do ServletUsuarioController - buscarUsuarioAjax!");
 				
 				String nomeBusca = request.getParameter("nomeBusca");
 				
@@ -63,34 +72,50 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				String json = mapper.writeValueAsString(dadosJsonUser);
 				
 				response.getWriter().write(json);
+				
+				System.out.println("Fim do ServletUsuarioController - buscarUsuarioAjax!");
 			
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("buscarEditar")) {
+				
+				System.out.println("Inicio do ServletUsuarioController - buscarEditar!");
 				
 				String id = request.getParameter("id");
 				
 				ModelLogin modelLogin = daoUsuarioRepository.consultaUsuarioID(id, super.getUserLogado(request));
 				
-				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
-				request.setAttribute("modelLogins", modelLogins);
+				List<ModelLogin> listaModel = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
+				request.setAttribute("listaModel", listaModel);
+				
+				System.out.println(modelLogin);
 				
 				request.setAttribute("msg", "USUÁRIO EM EDIÇÃO");
 				request.setAttribute("modelLogin", modelLogin);
 				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
+				
+				System.out.println("Fim do ServletUsuarioController - buscarEditar!");
 			
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listarUser")) {
 				
-				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
+				System.out.println("Inicio do ServletUsuarioController - listarUser!");
+				
+				List<ModelLogin> listaModel = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
 				
 				request.setAttribute("msg", "USUÁRIO CARREGADOS");
-				request.setAttribute("modelLogins", modelLogins);
+				request.setAttribute("listaModel", listaModel);
 				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
+				
+				System.out.println("Fim do ServletUsuarioController - listarUser!");
 				
 			} else {
 				
-				List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
-				request.setAttribute("modelLogins", modelLogins);
+				System.out.println("Inicio do ServletUsuarioController - ELSE!");
+				
+				List<ModelLogin> listaModel = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
+				request.setAttribute("listaModel", listaModel);
 				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
 			
+				System.out.println("Fim do ServletUsuarioController - ELSE!");
+				
 			}
 			
 			} catch (Exception e) {
@@ -111,7 +136,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 			
 		String msg = "Operação realizada com sucesso!";
 		
-		System.out.println("Começamos a usar a ServletUsuarioController");
+		System.out.println("Iniciamos a usar a ServletUsuarioController");
 		
 		String id = request.getParameter("id");
 		String nome = request.getParameter("nome");
@@ -119,6 +144,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 		String senha = request.getParameter("senha");
 		String email = request.getParameter("email");
 		String perfil = request.getParameter("perfil");
+		String sexo = request.getParameter("sexo");
 		
 		ModelLogin modelLogin = new ModelLogin();
 		
@@ -128,21 +154,38 @@ public class ServletUsuarioController extends ServletGenericUtil {
 		modelLogin.setSenha(senha);
 		modelLogin.setEmail(email);
 		modelLogin.setPerfil(perfil);
+		modelLogin.setSexo(sexo);
 
 		
 		if (daoUsuarioRepository.validarLogin(modelLogin.getLogin()) && modelLogin.getId() == null) {
 			msg = "Usuário já existente com este LOGIN, informe outro por favor!";
 		} else {
 			if(modelLogin.isNovo()) {
+				
 				msg = "Usuário Gravado com Sucesso!";
+				modelLogin = daoUsuarioRepository.gravarUsuario(modelLogin, super.getUserLogado(request));			
+				/*
+				@RequestMapping(value="/main/cadastro/{id}");
+				if(modelLogin.getId() ==  null) {
+					msg = "Usuário Cadastrado com Sucesso!";
+					modelLogin = daoUsuarioRepository.gravarUsuarioCadastro(modelLogin);
+				} 
+				
+				@RequestMapping(value="/main/usuario.jsp(id)");
+				if (modelLogin.getId() ==  null){
+					msg = "Usuário Gravado com Sucesso!";
+					modelLogin = daoUsuarioRepository.gravarUsuario(modelLogin, super.getUserLogado(request));
+				}
+				*/
 			} else {
 				msg = "Usuário Atualizado com Sucesso!";
+				modelLogin = daoUsuarioRepository.gravarUsuario(modelLogin, super.getUserLogado(request));
 			}
-			modelLogin = daoUsuarioRepository.gravarUsuario(modelLogin, super.getUserLogado(request));
+			
 		}
 		
-		List<ModelLogin> modelLogins = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
-		request.setAttribute("modelLogins", modelLogins);
+		List<ModelLogin> listaModel = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
+		request.setAttribute("listaModel", listaModel);
 		
 		RequestDispatcher redirecionar = request.getRequestDispatcher("main/usuario.jsp");
 		request.setAttribute("msg", "Operação Realizada com Sucesso!");

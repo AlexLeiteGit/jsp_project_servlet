@@ -13,6 +13,7 @@ public class ModelLogin implements Serializable{
 	private String senha;
 	private Boolean userAdmin;
 	private String perfil;
+	private String sexo;
 	
 	public Long getId() {
 		return id;
@@ -69,6 +70,14 @@ public class ModelLogin implements Serializable{
 	public void setPerfil(String perfil) {
 		this.perfil = perfil;
 	}
+	
+	public String getSexo() {
+		return sexo;
+	}
+
+	public void setSexo(String sexo) {
+		this.sexo = sexo;
+	}
 
 	public boolean isNovo() {
 		
@@ -80,5 +89,13 @@ public class ModelLogin implements Serializable{
 		
 		return id == null;
 	}
+
+	@Override
+	public String toString() {
+		return "ModelLogin [id=" + id + ", nome=" + nome + ", email=" + email + ", login=" + login + ", senha=" + senha
+				+ ", userAdmin=" + userAdmin + ", perfil=" + perfil + "]";
+	}
+	
+	
 	
 }

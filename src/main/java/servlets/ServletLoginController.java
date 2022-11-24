@@ -75,10 +75,8 @@ public class ServletLoginController extends HttpServlet {
 				request.getSession().setAttribute("usuario", modelLogin.getLogin());
 				request.getSession().setAttribute("perfil", modelLogin.getPerfil());
 				
-				if(url == null || url.equals("null")) {
-					
+				if(url == null || url.equals("null")) {	
 					url = "/main/main.jsp";
-					
 				}
 				
 				RequestDispatcher redirecionar = request.getRequestDispatcher(url);
