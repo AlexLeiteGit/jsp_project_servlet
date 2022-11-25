@@ -36,7 +36,7 @@
                           <div class="pcoded-navigation-label" data-i18n="nav.category.navigation">Layout</div>
                           <ul class="pcoded-item pcoded-left-item">
                               <li class="active">
-                                  <a href="index.html" class="waves-effect waves-dark">
+                                  <a href="main/main.jsp" class="waves-effect waves-dark">
                                       <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
                                       <span class="pcoded-mtext" data-i18n="nav.dash.main">Dashboard</span>
                                       <span class="pcoded-mcaret"></span>
@@ -45,7 +45,7 @@
                               <li class="pcoded-hasmenu">
                                   <a href="javascript:void(0)" class="waves-effect waves-dark">
                                       <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i></span>
-                                      <span class="pcoded-mtext"  data-i18n="nav.basic-components.main">Configurações</span>
+                                      <span class="pcoded-mtext"  data-i18n="nav.basic-components.main">Usuário</span>
                                       <span class="pcoded-mcaret"></span>
                                   </a>
                                   <ul class="pcoded-submenu">
@@ -54,7 +54,7 @@
                                       <li class=" ">
                                           <a href="<%= request.getContextPath()%>/ServletUsuarioController?acao=listarUser" class="waves-effect waves-dark">
                                               <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Usuário</span>
+                                              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Configurações</span>
                                               <span class="pcoded-mcaret"></span>
                                           </a>
                                       </li>

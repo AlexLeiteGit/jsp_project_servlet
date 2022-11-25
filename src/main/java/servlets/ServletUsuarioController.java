@@ -49,6 +49,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				request.setAttribute("listaModel", listaModel);
 				
 				request.setAttribute("msg", "USUÁRIO EXCLUÍDO COM SUCESSO");
+				request.setAttribute("totalPaginas", daoUsuarioRepository.totalPaginas(this.getUserLogado(request)));
 				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
 				
 				System.out.println("Fim do ServletUsuarioController - deletar!");
@@ -96,6 +97,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				System.out.println(modelLogin);
 				
 				request.setAttribute("msg", "USUÁRIO EM EDIÇÃO");
+				request.setAttribute("totalPaginas", daoUsuarioRepository.totalPaginas(this.getUserLogado(request)));
 				request.setAttribute("modelLogin", modelLogin);
 				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
 				
@@ -108,6 +110,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				List<ModelLogin> listaModel = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
 				
 				request.setAttribute("msg", "USUÁRIO CARREGADOS");
+				request.setAttribute("totalPaginas", daoUsuarioRepository.totalPaginas(this.getUserLogado(request)));
 				request.setAttribute("listaModel", listaModel);
 				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
 				
@@ -128,11 +131,22 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				
 				System.out.println("Fim do ServletUsuarioController - downloadFoto");
 				
+			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("paginar")) {
+				
+				Integer offset = Integer.parseInt(request.getParameter("pagina"));
+				
+				List<ModelLogin> listaModel = daoUsuarioRepository.consultaUsuarioListPaginada(this.getUserLogado(request), offset);
+				request.setAttribute("listaModel", listaModel);
+				request.setAttribute("totalPaginas", daoUsuarioRepository.totalPaginas(this.getUserLogado(request)));
+				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
+				
+				
 			} else {
 				
 				System.out.println("Inicio do ServletUsuarioController - ELSE!");
 				
 				List<ModelLogin> listaModel = daoUsuarioRepository.consultaUsuarioListJstl(super.getUserLogado(request));
+				request.setAttribute("totalPaginas", daoUsuarioRepository.totalPaginas(this.getUserLogado(request)));
 				request.setAttribute("listaModel", listaModel);
 				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
 			
@@ -242,6 +256,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 		
 		RequestDispatcher redirecionar = request.getRequestDispatcher("main/usuario.jsp");
 		request.setAttribute("msg", "Operação Realizada com Sucesso!");
+		request.setAttribute("totalPaginas", daoUsuarioRepository.totalPaginas(this.getUserLogado(request)));
 		request.setAttribute("modelLogin", modelLogin);//o primeiro parâmetro é o nome e o segundo o objeto modelLogin que estamos usando acima. Ele é que será retornado.
 		redirecionar.forward(request, response);
 		

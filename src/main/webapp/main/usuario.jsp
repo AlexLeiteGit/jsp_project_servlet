@@ -254,7 +254,20 @@
 										</c:forEach>
 										</tbody>
 										</table>
-											</div>
+										</div>
+										
+										<nav aria-label="Page navigation example">
+											<ul class="pagination">
+												<%
+													int totalPagina = (int) request.getAttribute("totalPaginas");
+													for(int p = 0 ; p < totalPagina ; p++){
+													String url = request.getContextPath() + "/ServletUsuarioController?acao=paginar&pagina=" + (p * 5);//neste caso, a multiplicação por 5 se deve pela nossa escolha de limite de paginação.
+													out.print("<li class=\"page-item\"><a class=\"page-link\" href=\"" + url + "\">" + (p+1) + "</a></li>");
+													}
+								
+												%>
+											</ul>
+										</nav> 
                                     
                                     <!-- Page-body end -->
                                 </div>

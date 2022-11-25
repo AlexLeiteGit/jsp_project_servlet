@@ -37,7 +37,7 @@
                                         <div class="row">
                                             <!-- task, page, download counter  start -->
                                             
-                                            <h1>Conteúdo das Páginas do Sistema. Iremos implementar depois uma funcionalidade principal. Provavelmente será o consumo de uma API gratuíta.</h1>
+                                            <h1>Conteúdo do Sistema.</h1>
                                             
                                             <!-- task, page, download counter  end -->
     
