@@ -36,7 +36,7 @@ public class DAOUsuarioRepository {
 		//Método de gravar usuário
 		if(modelLogin.isNovo() == true && userLogado != null) {
 		
-		String sql = "INSERT INTO model_login(login, senha, nome, email, usuario_id, perfil) VALUES (?, ?, ?, ?, ?, ?);";
+		String sql = "INSERT INTO model_login(login, senha, nome, email, usuario_id, perfil, sexo, cep, logradouro, numero, complemento, bairro, localidade, uf) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		
 		PreparedStatement preparedSql = connection.prepareStatement(sql);
 		preparedSql.setString(1, modelLogin.getLogin());
@@ -45,6 +45,15 @@ public class DAOUsuarioRepository {
 		preparedSql.setString(4, modelLogin.getEmail());
 		preparedSql.setLong(5, userLogado);
 		preparedSql.setString(6, modelLogin.getPerfil());
+		preparedSql.setString(7, modelLogin.getSexo());
+		
+		preparedSql.setString(8, modelLogin.getCep());
+		preparedSql.setString(9, modelLogin.getLogradouro());
+		preparedSql.setString(10, modelLogin.getNumero());
+		preparedSql.setString(11, modelLogin.getComplemento());
+		preparedSql.setString(12, modelLogin.getBairro());
+		preparedSql.setString(13, modelLogin.getLocalidade());
+		preparedSql.setString(14, modelLogin.getUf());
 		
 		preparedSql.execute();
 		
@@ -69,7 +78,7 @@ public class DAOUsuarioRepository {
 		//Método de atualizar usuário
 		} else {
 			
-			String sql = "UPDATE model_login SET login=?, senha=?, nome=?, email=?, perfil=? WHERE id = "+modelLogin.getId()+";";
+			String sql = "UPDATE model_login SET login=?, senha=?, nome=?, email=?, perfil=?, sexo=?, cep=?, logradouro=?, numero=?, complemento=?, bairro=?, localidade=?, uf=? WHERE id = "+modelLogin.getId()+";";
 			
 			PreparedStatement statement = connection.prepareStatement(sql);
 			
@@ -78,6 +87,15 @@ public class DAOUsuarioRepository {
 			statement.setString(3, modelLogin.getNome());
 			statement.setString(4, modelLogin.getEmail());
 			statement.setString(5, modelLogin.getPerfil());
+			statement.setString(6, modelLogin.getSexo());
+			
+			statement.setString(7, modelLogin.getCep());
+			statement.setString(8, modelLogin.getLogradouro());
+			statement.setString(9, modelLogin.getNumero());
+			statement.setString(10, modelLogin.getComplemento());
+			statement.setString(11, modelLogin.getBairro());
+			statement.setString(12, modelLogin.getLocalidade());
+			statement.setString(13, modelLogin.getUf());
 			
 			statement.executeUpdate();
 			
@@ -104,29 +122,27 @@ public class DAOUsuarioRepository {
 		return this.consultaUsuarioPrimeira(modelLogin.getLogin(), userLogado);
 		
 	}
-	
-	//Método de Gravação de Usuário pelo Cadastro de Primeiro Acesso
-	public ModelLogin gravarUsuarioCadastro(ModelLogin modelLogin) throws Exception {
-			
-				String sql = "INSERT INTO model_login(login, senha, nome, email, perfil) VALUES (?, ?, ?, ?, ?);";
+
+//	Método de Gravação de Usuário pelo Cadastro de Primeiro Acesso
+//	public ModelLogin gravarUsuarioCadastro(ModelLogin modelLogin) throws Exception {
+//			
+//				String sql = "INSERT INTO model_login(login, senha, nome, email, perfil) VALUES (?, ?, ?, ?, ?);";
+//				
+//				PreparedStatement preparedSql = connection.prepareStatement(sql);
+//				preparedSql.setString(1, modelLogin.getLogin());
+//				preparedSql.setString(2, modelLogin.getSenha());
+//				preparedSql.setString(3, modelLogin.getNome());
+//				preparedSql.setString(4, modelLogin.getEmail());
+//				preparedSql.setString(5, modelLogin.getPerfil());
+//				
+//				preparedSql.execute();
+//				
+//				connection.commit();/*Salva os dados*/
+//				
+//				return this.consultaUsuario(modelLogin.getLogin());
+//				
+//	}
 				
-				PreparedStatement preparedSql = connection.prepareStatement(sql);
-				preparedSql.setString(1, modelLogin.getLogin());
-				preparedSql.setString(2, modelLogin.getSenha());
-				preparedSql.setString(3, modelLogin.getNome());
-				preparedSql.setString(4, modelLogin.getEmail());
-				preparedSql.setString(5, modelLogin.getPerfil());
-				
-				preparedSql.execute();
-				
-				connection.commit();/*Salva os dados*/
-				
-				return this.consultaUsuario(modelLogin.getLogin());
-				
-	}
-			
-			
-	
 	//Método de Confirmação de Deletar usuário
 	public void deletarUsuario(String idUser) throws Exception {
 		
@@ -161,6 +177,15 @@ public class DAOUsuarioRepository {
 			modelLogin.setNome(resultSet.getString("nome"));
 			modelLogin.setPerfil(resultSet.getString("perfil"));
 			modelLogin.setSexo(resultSet.getString("sexo"));
+			modelLogin.setFotouser(resultSet.getString("fotouser"));
+			
+			modelLogin.setCep(resultSet.getString("cep"));
+			modelLogin.setLogradouro(resultSet.getString("logradouro"));
+			modelLogin.setNumero(resultSet.getString("numero"));
+			modelLogin.setComplemento(resultSet.getString("complemento"));
+			modelLogin.setBairro(resultSet.getString("bairro"));
+			modelLogin.setLocalidade(resultSet.getString("localidade"));
+			modelLogin.setUf(resultSet.getString("uf"));
 		}
 		
 		return modelLogin;
@@ -220,6 +245,14 @@ public class DAOUsuarioRepository {
 			modelLogin.setSexo(resultSet.getString("sexo"));
 			modelLogin.setFotouser(resultSet.getString("fotouser"));
 			modelLogin.setExtensaoFotoUser(resultSet.getString("extensaofotouser"));
+			
+			modelLogin.setCep(resultSet.getString("cep"));
+			modelLogin.setLogradouro(resultSet.getString("logradouro"));
+			modelLogin.setNumero(resultSet.getString("numero"));
+			modelLogin.setComplemento(resultSet.getString("complemento"));
+			modelLogin.setBairro(resultSet.getString("bairro"));
+			modelLogin.setLocalidade(resultSet.getString("localidade"));
+			modelLogin.setUf(resultSet.getString("uf"));
 		}
 		
 		return modelLogin;
@@ -300,6 +333,14 @@ public class DAOUsuarioRepository {
 			modelLogin.setPerfil(resultSet.getString("perfil"));
 			modelLogin.setSexo(resultSet.getString("sexo"));
 			modelLogin.setFotouser(resultSet.getString("fotouser"));
+			
+			modelLogin.setCep(resultSet.getString("cep"));
+			modelLogin.setLogradouro(resultSet.getString("logradouro"));
+			modelLogin.setNumero(resultSet.getString("numero"));
+			modelLogin.setComplemento(resultSet.getString("complemento"));
+			modelLogin.setBairro(resultSet.getString("bairro"));
+			modelLogin.setLocalidade(resultSet.getString("localidade"));
+			modelLogin.setUf(resultSet.getString("uf"));
 		}
 		
 		return modelLogin;
