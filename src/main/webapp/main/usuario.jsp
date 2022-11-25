@@ -43,7 +43,7 @@
                                     
                                     <h4 class="sub-title">Cadastro de Usuários</h4>
                                     
-                                    <form class="form-material" action="<%= request.getContextPath()%>/ServletUsuarioController" method="post" id="formUser">
+                                    <form class="form-material" enctype="multipart/form-data" action="<%= request.getContextPath()%>/ServletUsuarioController" method="post" id="formUser">
                                     
                                     <input type="hidden" name="acao" value="">
                                     
@@ -115,17 +115,31 @@
 												<label class="float-label">Perfil:</label>
 												</div>
 
-												<div class="form-group form-default form-static-label">
-                                            	<input type="text" name="login" id="login" class="form-control" required="requered" autocomplete="off" value="${modelLogin.login}">
-                                           		<span class="form-bar"></span>
-                                            	<label class="float-label">Login:</label>
-                                        		</div>
+										<div class="form-group form-default form-static-label">
+                                            <input type="text" name="login" id="login" class="form-control" required="requered" autocomplete="off" value="${modelLogin.login}">
+                                           	<span class="form-bar"></span>
+                                            <label class="float-label">Login:</label>
+                                        </div>
                                         
                                         <div class="form-group form-default form-static-label">
                                             <input type="text" name="nome" id="nome" class="form-control" required="requered" value="${modelLogin.nome}">
                                             <span class="form-bar"></span>
                                             <label class="float-label">Nome:</label>
                                         </div>
+                                        
+                                        <div class="form-group form-default input-group mb-4">
+											<div class="input-group-prepend">
+												<c:if test="${modelLogin.fotouser != '' && modelLogin.fotouser != null}">
+													<a href="<%= request.getContextPath()%>/ServletUsuarioController?acao=downloadFoto&id=${modelLogin.id}">
+													<img alt="Imagem User" id="fotoembase64" src="${modelLogin.fotouser}" width="70px">
+												</c:if>
+												
+												<c:if test="${modelLogin.fotouser == '' || modelLogin.fotouser == null}">
+													<img alt="Imagem User" id="fotoembase64" src="assets/images/avatar-5.jpg" width="70px">
+												</c:if>
+											</div>
+											<input type="file" id="fileFoto" name="fileFoto" accept="image/*" onchange="visualizarImg('fotoembase64', 'fileFoto');" class="form-control-file" style="margin-top: 15px; margin-left: 5px;">
+										</div>
                                         
                                         <div class="form-group form-default form-static-label">
 											<input type="radio" name="sexo" value="MASCULINO" <% 
@@ -355,6 +369,25 @@
 		var urlAction = document.getElementById('formUser').action;
 		
 		window.location.href = urlAction + '?acao=buscarEditar&id=' + id;
+		
+	}
+	
+	<!-- Método para carregar foto do perfiçl do usuário-->
+	function visualizarImg(fotoembase64, fileFoto){
+		
+		var preview = document.getElementById(fotoembase64);/*Campo IMG do HTML*/
+		var fileUser = document.getElementById(fileFoto).files[0];
+		var reader = new FileReader();
+		
+		reader.onloadend = function(){
+			preview.src = reader.result;/*carrega a foto na tela*/
+		};
+		
+		if(fileUser){
+			reader.readAsDataURL(fileUser);/*preview da imagem*/
+		} else {
+			preview.src = "";
+		}		
 		
 	}
 

@@ -50,6 +50,22 @@ public class DAOUsuarioRepository {
 		
 		connection.commit();/*Salva os dados*/
 		
+		if (modelLogin.getFotouser() != null && !modelLogin.getFotouser().isEmpty()){
+			
+			sql = "UPDATE model_login set fotouser=?, extensaofotouser=? where login=?";
+			
+			preparedSql = connection.prepareStatement(sql);
+			
+			preparedSql.setString(1, modelLogin.getFotouser());
+			preparedSql.setString(2, modelLogin.getExtensaoFotoUser());
+			preparedSql.setString(3, modelLogin.getLogin());
+			
+			preparedSql.execute();
+			
+			connection.commit();
+			
+		}
+		
 		//Método de atualizar usuário
 		} else {
 			
@@ -66,6 +82,22 @@ public class DAOUsuarioRepository {
 			statement.executeUpdate();
 			
 			connection.commit();
+			
+			if (modelLogin.getFotouser() != null && !modelLogin.getFotouser().isEmpty()){
+				
+				sql = "UPDATE model_login set fotouser=?, extensaofotouser=? where id=?";
+				
+				statement = connection.prepareStatement(sql);
+				
+				statement.setString(1, modelLogin.getFotouser());
+				statement.setString(2, modelLogin.getExtensaoFotoUser());
+				statement.setLong(3, modelLogin.getId());
+				
+				statement.execute();
+				
+				connection.commit();
+				
+			}
 			
 		}
 		
@@ -186,6 +218,8 @@ public class DAOUsuarioRepository {
 			modelLogin.setNome(resultSet.getString("nome"));
 			modelLogin.setPerfil(resultSet.getString("perfil"));
 			modelLogin.setSexo(resultSet.getString("sexo"));
+			modelLogin.setFotouser(resultSet.getString("fotouser"));
+			modelLogin.setExtensaoFotoUser(resultSet.getString("extensaofotouser"));
 		}
 		
 		return modelLogin;
@@ -239,6 +273,7 @@ public class DAOUsuarioRepository {
 			modelLogin.setNome(resultSet.getString("nome"));
 			modelLogin.setPerfil(resultSet.getString("perfil"));
 			modelLogin.setSexo(resultSet.getString("sexo"));
+			modelLogin.setFotouser(resultSet.getString("fotouser"));
 		}
 		
 		return modelLogin;
@@ -264,6 +299,7 @@ public class DAOUsuarioRepository {
 			modelLogin.setUserAdmin(resultSet.getBoolean("useradmin"));
 			modelLogin.setPerfil(resultSet.getString("perfil"));
 			modelLogin.setSexo(resultSet.getString("sexo"));
+			modelLogin.setFotouser(resultSet.getString("fotouser"));
 		}
 		
 		return modelLogin;
