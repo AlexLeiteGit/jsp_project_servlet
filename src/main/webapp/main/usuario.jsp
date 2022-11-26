@@ -343,6 +343,10 @@
     
 <script type="text/javascript">
 
+$("#cep").keypress(function(event) {
+    return /\d/.test(String.fromCharCode(event.keyCode));
+});
+
 	<!-- Método de Limpar o formulário-->
 	function limparForm(){
 			var elementos = document.getElementById("formUser").elements; /*retorna os elementos html dentro do form*/

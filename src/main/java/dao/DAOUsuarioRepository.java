@@ -182,7 +182,7 @@ public class DAOUsuarioRepository {
 		
 		return pagina.intValue();
 		
-	}  
+	}
 	
 	//1º Método de Consulta de Usuário.
 	public ModelLogin consultaUsuarioPrimeira(String login, Long userLogado) throws Exception {
