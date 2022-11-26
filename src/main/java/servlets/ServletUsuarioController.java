@@ -1,6 +1,8 @@
 package servlets;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.tomcat.jakartaee.commons.compress.utils.IOUtils;
@@ -211,6 +213,8 @@ public class ServletUsuarioController extends ServletGenericUtil {
 		String localidade = request.getParameter("localidade");
 		String uf = request.getParameter("uf");
 		
+		String dataNascimento = request.getParameter("dataNascimento");
+		
 		ModelLogin modelLogin = new ModelLogin();
 		
 		modelLogin.setId(id != null && !id.isEmpty() ? Long.parseLong(id) : null);
@@ -228,6 +232,8 @@ public class ServletUsuarioController extends ServletGenericUtil {
 		modelLogin.setBairro(bairro);
 		modelLogin.setLocalidade(localidade);
 		modelLogin.setUf(uf);
+		
+		modelLogin.setDataNascimento(Date.valueOf(new SimpleDateFormat("yyyy-mm-dd").format(new SimpleDateFormat("dd/mm/yyyy").parse(dataNascimento))));
 		
 		if(ServletFileUpload.isMultipartContent(request)) {
 			

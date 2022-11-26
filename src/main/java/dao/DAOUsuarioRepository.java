@@ -36,7 +36,7 @@ public class DAOUsuarioRepository {
 		//Método de gravar usuário
 		if(modelLogin.isNovo() == true && userLogado != null) {
 		
-		String sql = "INSERT INTO model_login(login, senha, nome, email, usuario_id, perfil, sexo, cep, logradouro, numero, complemento, bairro, localidade, uf) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		String sql = "INSERT INTO model_login(login, senha, nome, email, usuario_id, perfil, sexo, cep, logradouro, numero, complemento, bairro, localidade, uf, datanascimento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		
 		PreparedStatement preparedSql = connection.prepareStatement(sql);
 		preparedSql.setString(1, modelLogin.getLogin());
@@ -54,6 +54,8 @@ public class DAOUsuarioRepository {
 		preparedSql.setString(12, modelLogin.getBairro());
 		preparedSql.setString(13, modelLogin.getLocalidade());
 		preparedSql.setString(14, modelLogin.getUf());
+		
+		preparedSql.setDate(15, modelLogin.getDataNascimento());
 		
 		preparedSql.execute();
 		
@@ -78,7 +80,7 @@ public class DAOUsuarioRepository {
 		//Método de atualizar usuário
 		} else {
 			
-			String sql = "UPDATE model_login SET login=?, senha=?, nome=?, email=?, perfil=?, sexo=?, cep=?, logradouro=?, numero=?, complemento=?, bairro=?, localidade=?, uf=? WHERE id = "+modelLogin.getId()+";";
+			String sql = "UPDATE model_login SET login=?, senha=?, nome=?, email=?, perfil=?, sexo=?, cep=?, logradouro=?, numero=?, complemento=?, bairro=?, localidade=?, uf=?, datanascimento=? WHERE id = "+modelLogin.getId()+";";
 			
 			PreparedStatement statement = connection.prepareStatement(sql);
 			
@@ -96,6 +98,8 @@ public class DAOUsuarioRepository {
 			statement.setString(11, modelLogin.getBairro());
 			statement.setString(12, modelLogin.getLocalidade());
 			statement.setString(13, modelLogin.getUf());
+			
+			statement.setDate(14, modelLogin.getDataNascimento());
 			
 			statement.executeUpdate();
 			
