@@ -79,10 +79,31 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				ObjectMapper mapper = new ObjectMapper();
 				String json = mapper.writeValueAsString(dadosJsonUser);
 				
+				/*As '' estão ai pois este método retorna String e a consulta retorna um int. Para acabarmos com o erro devemos concatenar o int com uma String vazia ("")*/
+				response.addHeader("totalPaginas", "" + daoUsuarioRepository.consultaUsuarioListTotalPaginaPaginacao(nomeBusca, this.getUserLogado(request)));
+				
 				response.getWriter().write(json);
 				
 				System.out.println("Fim do ServletUsuarioController - buscarUsuarioAjax!");
 			
+			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("buscarUsuarioAjaxPage")) {
+				
+				System.out.println("Inicio do ServletUsuarioController - buscarUsuarioAjaxPage!");
+				
+				String nomeBusca = request.getParameter("nomeBusca");
+				String pagina = request.getParameter("pagina");
+				
+				List<ModelLogin> dadosJsonUser = daoUsuarioRepository.consultaUsuarioListOffset(nomeBusca, super.getUserLogado(request), Integer.parseInt(pagina));
+				
+				ObjectMapper mapper = new ObjectMapper();
+				String json = mapper.writeValueAsString(dadosJsonUser);
+				
+				/*As '' estão ai pois este método retorna String e a consulta retorna um int. Para acabarmos com o erro devemos concatenar o int com uma String vazia ("")*/
+				response.addHeader("totalPaginas", "" + daoUsuarioRepository.consultaUsuarioListTotalPaginaPaginacao(nomeBusca, this.getUserLogado(request)));
+				response.getWriter().write(json);
+			
+				System.out.println("Fim do ServletUsuarioController - buscarUsuarioAjaxPage!");
+				
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("buscarEditar")) {
 				
 				System.out.println("Inicio do ServletUsuarioController - buscarEditar!");

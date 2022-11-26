@@ -6,16 +6,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.ModelLogin;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 
+import dao.DAOTelefoneRepository;
 import dao.DAOUsuarioRepository;
 
-/**
- * Servlet implementation class ServletGenericUtil
- */
+@WebServlet("/ServletGenericUtil")
 public class ServletGenericUtil extends HttpServlet implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -34,15 +34,14 @@ public class ServletGenericUtil extends HttpServlet implements Serializable{
     	return daoUsuarioRepository.consultaUsuarioLogado(usuarioLogado).getId();
     	
     }
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+    
+    public ModelLogin getUserLogadoObjeto(HttpServletRequest request) throws Exception {
+    	
+    	HttpSession session = request.getSession();
+    	String usuarioLogado = (String) session.getAttribute("usuario");
+    	
+    	return daoUsuarioRepository.consultaUsuarioLogado(usuarioLogado);
+    	
+    }
 
 }

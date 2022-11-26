@@ -222,9 +222,9 @@
             							<button class="btn btn-out-dashed waves-effect waves-light btn-info btn-square" onclick="criarDelete()">Excluir com Post</button>
             							<button class="btn btn-out-dashed waves-effect waves-light btn-warning btn-square" onclick="criarDeleteComAjax()">Excluir com Ajax</button>
             							<button type="button" class="btn btn-out-dashed waves-effect waves-light btn-danger btn-square" data-toggle="modal" data-target="#ModalConsultaUsuario">Pesquisar</button>
-            							<button class="btn btn-out-dashed waves-effect waves-light btn-danger btn-square">Danger Button</button>
-            							<button class="btn btn-out-dashed waves-effect waves-light btn-inverse btn-square">Inverse Button</button>
-
+            							<c:if test="${modelLogin.id > 0}">
+            							<a href="<%= request.getContextPath() %>/ServletTelefoneController?idUser=${modelLogin.id}" class="btn btn-info waves-effect waves-light">Telefone</a>
+										</c:if>
                                       </form>
                                       
                                       </div>
@@ -320,6 +320,13 @@
 				</table>
 				</div>
 				
+				<nav aria-label="Page navigation example">
+					<ul class="pagination" id="ulPaginacaoUserAjax">
+					
+					
+					
+					</ul>
+				
 				<div>
 				<span id="totalResultadosBusca"></span>
 				</div>
@@ -397,17 +404,26 @@
 				method: "get",
 				url : urlAction,
 				data : "nomeBusca=" + nomeBusca + '&acao=buscarUsuarioAjax',
-				success: function (response){
+				success: function (response, textStatus, xhr){
 					
 					var json = JSON.parse(response);
 					
 					$('#tabelaResultados > tbody > tr').remove();
+					$("#ulPaginacaoUserAjax > li").remove();
 					
 					for(var p = 0 ; p < json.length ; p++){
 						$('#tabelaResultados > tbody').append('<tr><td>' + json[p].id + '</td> <td>' + json[p].nome + '</td> <td>' + json[p].email + '</td> <td><button onclick="buscarParaEditar(' +json[p].id+ ')" class="btn btn-out-dashed waves-effect waves-light btn-danger btn-square">Detalhe</button></td></tr>');
 					}	
 					
 					document.getElementById('totalResultadosBusca').textContent = 'Resultados: ' + json.length;
+					
+					var totalPaginas = xhr.getResponseHeader("totalPaginas");
+					
+					for (var p = 0 ; p < totalPaginas ; p++){
+						var url = urlAction + "?nomeBusca="+ nomeBusca + "&acao=buscarUsuarioAjaxPage&pagina=" + (p * 5);/* este parâmetros foram tirados da linha 487 acima*/
+						$("#ulPaginacaoUserAjax").append('<li class="page-item"><a class="page-link" href="#" onclick="buscaUserPagAjax(\'' + url + '\')">' + (p+1) + '</a></li>');
+						
+					}
 					
 				}
 				
@@ -461,7 +477,58 @@
                 $("#uf").val(dados.uf);
             }
             
-        });
+        });	
+	}
+	
+	<!-- Método de Paginação no Modal por Ajax-->
+	function buscaUserPagAjax(url){
+		
+		var urlAction = document.getElementById('formUser').action;
+		var nomeBusca = document.getElementById('nomeBusca').value;
+		
+		$.ajax({
+
+			method : "get",
+			url : urlAction,
+			data : url,
+			success : function(response, textStatus, xhr) {
+
+			var json = JSON.parse(response);
+
+			$('#tabelaresultados > tbody > tr').remove();
+			$("#ulPaginacaoUserAjax > li").remove();
+
+			for (var p = 0; p < json.length; p++) {
+			$('#tabelaresultados > tbody')
+				.append(
+				'<tr><td>'
+						+ json[p].id
+						+ '</td> <td>'
+						+ json[p].nome
+						+ '</td> <td>'
+						+ json[p].email
+						+ '</td> <td><button onclick="buscarParaEditar('
+						+ json[p].id
+						+ ')" type="button" class="btn btn-info btn-round waves-effect waves-light">Detalhe</button></td></tr>');
+			}
+
+			document.getElementById('totalResultadosBusca').textContent = 'Resultados: ' + json.length;
+			
+			var totalPaginas = xhr.getResponseHeader("totalPaginas");
+			
+			for (var p = 0 ; p < totalPaginas ; p++){
+				
+				var url = 'nomeBusca=' + nomeBusca + '&acao=buscarUsuarioAjaxPage&pagina=' + (p * 5);/* este parâmetros foram tirados da linha 487 acima*/
+				
+				$("#ulPaginacaoUserAjax").append('<li class="page-item"><a class="page-link" href="#" onclick="buscaUserPagAjax(\'' + url + '\')">' + (p+1) + '</a></li>');
+				
+			}
+			
+		}
+
+		}).fail(function(xhr, status, errorThrown) {
+			alert('Erro ao buscar usuário pelo nome: ' + xhr.responseText);
+		});
 		
 	}
 

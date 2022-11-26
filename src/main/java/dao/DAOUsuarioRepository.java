@@ -401,4 +401,98 @@ public class DAOUsuarioRepository {
 		return retorno;		
 	}
 	
+	//8º Método de Consulta - Método para paginação diretamente no modal
+	public int consultaUsuarioListTotalPaginaPaginacao(String nome, Long userLogado) throws Exception{
+		
+		String sql = "select count(1) as total from model_login where upper(nome) like upper(?) and useradmin is false and usuario_id = ? ";
+		
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, "%" + nome + "%");/*Os % são utilizados por causa do operador LIKE*/
+		statement.setLong(2, userLogado);
+		
+		ResultSet resultado = statement.executeQuery();
+		
+		resultado.next();//para evitar o estou na tela
+		
+		Double cadastros = resultado.getDouble("total");
+		
+		Double porPagina = 5.0;
+		
+		Double pagina = cadastros / porPagina;
+		
+		Double resto = pagina % 2;
+		
+		if(resto > 0) {
+			pagina++;
+		}
+		
+		return pagina.intValue();		
+	}
+	
+	//9º Método de Consulta - Cosulta com retorno de OFFSET
+	public List<ModelLogin> consultaUsuarioListOffset(String nome, Long userLogado, Integer offset) throws Exception{
+		
+		List<ModelLogin> retorno = new ArrayList<ModelLogin>();
+		
+		String sql = "select * from model_login where upper(nome) like upper(?) and useradmin is false and usuario_id = ? offset=? limit 5";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, "%" + nome + "%");/*Os % são utilizados por causa do operador LIKE*/
+		statement.setLong(2, userLogado);
+		statement.setInt(3, offset);
+		
+		ResultSet resultado = statement.executeQuery();
+		
+		while(resultado.next()){
+			
+			ModelLogin modelLogin = new ModelLogin();
+			
+			modelLogin.setEmail(resultado.getString("email"));/*O retorno vem das colunas do banco de dados*/
+			modelLogin.setId(resultado.getLong("id"));
+			modelLogin.setLogin(resultado.getString("login"));
+			modelLogin.setNome(resultado.getString("nome"));
+			modelLogin.setSenha(resultado.getString("senha"));
+			modelLogin.setPerfil(resultado.getString("perfil"));
+			modelLogin.setSexo(resultado.getString("sexo"));
+			
+			retorno.add(modelLogin);
+			
+		}
+		
+		return retorno;		
+	}
+	
+	//10º Método de Consulta - Consulta de Usuário por ID para utilização na Tabela de Telefones
+	public ModelLogin consultaUsuarioIDTelefone(Long id) throws Exception {
+		
+		ModelLogin modelLogin = new ModelLogin();
+		
+		String sql = "select * from model_login where id = ? and useradmin is false";
+		
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setLong(1, id);
+				
+		ResultSet resultSet = statement.executeQuery();
+		
+		while(resultSet.next()) {
+			modelLogin.setId(resultSet.getLong("id"));
+			modelLogin.setEmail(resultSet.getString("email"));
+			modelLogin.setLogin(resultSet.getString("login"));
+			modelLogin.setSenha(resultSet.getString("senha"));
+			modelLogin.setNome(resultSet.getString("nome"));
+			modelLogin.setPerfil(resultSet.getString("perfil"));
+			modelLogin.setSexo(resultSet.getString("sexo"));
+			modelLogin.setFotouser(resultSet.getString("fotouser"));
+			modelLogin.setExtensaoFotoUser(resultSet.getString("extensaofotouser"));
+			
+			modelLogin.setCep(resultSet.getString("cep"));
+			modelLogin.setLogradouro(resultSet.getString("logradouro"));
+			modelLogin.setNumero(resultSet.getString("numero"));
+			modelLogin.setComplemento(resultSet.getString("complemento"));
+			modelLogin.setBairro(resultSet.getString("bairro"));
+			modelLogin.setLocalidade(resultSet.getString("localidade"));
+			modelLogin.setUf(resultSet.getString("uf"));
+		}
+		
+		return modelLogin;
+	}
 }
