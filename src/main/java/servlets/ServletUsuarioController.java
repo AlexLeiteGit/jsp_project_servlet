@@ -164,6 +164,27 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				request.getRequestDispatcher("main/usuario.jsp").forward(request, response);
 				
 				
+			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("imprimirRelatorioUser")) {
+				
+				String dataInicial = request.getParameter("dataInicial");
+				String dataFinal = request.getParameter("dataFinal");
+				
+				System.out.println("Tudo funcionando corretamente até agora!!!!!");
+				
+				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()){
+					
+					request.setAttribute("listaUser", daoUsuarioRepository.consultaUsuarioListRelatorio(super.getUserLogado(request)));
+					
+				} else {
+					
+					request.setAttribute("listaUser", daoUsuarioRepository.consultaUsuarioListRelatorio(super.getUserLogado(request), dataInicial, dataFinal));
+					
+				}
+				
+				request.setAttribute("dataInicial", dataInicial);
+				request.setAttribute("dataFinal", dataFinal);
+				request.getRequestDispatcher("main/reluser.jsp").forward(request, response);
+				
 			} else {
 				
 				System.out.println("Inicio do ServletUsuarioController - ELSE!");
@@ -215,6 +236,9 @@ public class ServletUsuarioController extends ServletGenericUtil {
 		
 		String dataNascimento = request.getParameter("dataNascimento");
 		
+		String rendaMensal = request.getParameter("rendaMensal");		
+		//rendaMensal = rendaMensal.split("\\ ")[1].replaceAll("\\.", "").replaceAll("\\,", ".");
+		
 		ModelLogin modelLogin = new ModelLogin();
 		
 		modelLogin.setId(id != null && !id.isEmpty() ? Long.parseLong(id) : null);
@@ -234,6 +258,8 @@ public class ServletUsuarioController extends ServletGenericUtil {
 		modelLogin.setUf(uf);
 		
 		modelLogin.setDataNascimento(Date.valueOf(new SimpleDateFormat("yyyy-mm-dd").format(new SimpleDateFormat("dd/mm/yyyy").parse(dataNascimento))));
+		
+		modelLogin.setRendaMensal(Double.valueOf(rendaMensal));
 		
 		if(ServletFileUpload.isMultipartContent(request)) {
 			

@@ -1,14 +1,17 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import connection.SingleConnectionBanco;
 import model.ModelLogin;
+import model.ModelTelefone;
 
 public class DAOUsuarioRepository {
 	
@@ -36,7 +39,7 @@ public class DAOUsuarioRepository {
 		//Método de gravar usuário
 		if(modelLogin.isNovo() == true && userLogado != null) {
 		
-		String sql = "INSERT INTO model_login(login, senha, nome, email, usuario_id, perfil, sexo, cep, logradouro, numero, complemento, bairro, localidade, uf, datanascimento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		String sql = "INSERT INTO model_login(login, senha, nome, email, usuario_id, perfil, sexo, cep, logradouro, numero, complemento, bairro, localidade, uf, datanascimento, rendamensal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		
 		PreparedStatement preparedSql = connection.prepareStatement(sql);
 		preparedSql.setString(1, modelLogin.getLogin());
@@ -56,6 +59,8 @@ public class DAOUsuarioRepository {
 		preparedSql.setString(14, modelLogin.getUf());
 		
 		preparedSql.setDate(15, modelLogin.getDataNascimento());
+		
+		preparedSql.setDouble(16, modelLogin.getRendaMensal());
 		
 		preparedSql.execute();
 		
@@ -80,7 +85,7 @@ public class DAOUsuarioRepository {
 		//Método de atualizar usuário
 		} else {
 			
-			String sql = "UPDATE model_login SET login=?, senha=?, nome=?, email=?, perfil=?, sexo=?, cep=?, logradouro=?, numero=?, complemento=?, bairro=?, localidade=?, uf=?, datanascimento=? WHERE id = "+modelLogin.getId()+";";
+			String sql = "UPDATE model_login SET login=?, senha=?, nome=?, email=?, perfil=?, sexo=?, cep=?, logradouro=?, numero=?, complemento=?, bairro=?, localidade=?, uf=?, datanascimento=?, rendamensal=? WHERE id = "+modelLogin.getId()+";";
 			
 			PreparedStatement statement = connection.prepareStatement(sql);
 			
@@ -100,6 +105,8 @@ public class DAOUsuarioRepository {
 			statement.setString(13, modelLogin.getUf());
 			
 			statement.setDate(14, modelLogin.getDataNascimento());
+			
+			statement.setDouble(15, modelLogin.getRendaMensal());
 			
 			statement.executeUpdate();
 			
@@ -216,6 +223,10 @@ public class DAOUsuarioRepository {
 			modelLogin.setBairro(resultSet.getString("bairro"));
 			modelLogin.setLocalidade(resultSet.getString("localidade"));
 			modelLogin.setUf(resultSet.getString("uf"));
+			
+			modelLogin.setDataNascimento(resultSet.getDate("datanascimento"));
+			
+			modelLogin.setRendaMensal(resultSet.getDouble("rendamensal"));
 		}
 		
 		return modelLogin;
@@ -283,6 +294,10 @@ public class DAOUsuarioRepository {
 			modelLogin.setBairro(resultSet.getString("bairro"));
 			modelLogin.setLocalidade(resultSet.getString("localidade"));
 			modelLogin.setUf(resultSet.getString("uf"));
+			
+			modelLogin.setDataNascimento(resultSet.getDate("datanascimento"));
+			
+			modelLogin.setRendaMensal(resultSet.getDouble("rendamensal"));
 		}
 		
 		return modelLogin;
@@ -371,6 +386,10 @@ public class DAOUsuarioRepository {
 			modelLogin.setBairro(resultSet.getString("bairro"));
 			modelLogin.setLocalidade(resultSet.getString("localidade"));
 			modelLogin.setUf(resultSet.getString("uf"));
+			
+			modelLogin.setDataNascimento(resultSet.getDate("datanascimento"));
+			
+			modelLogin.setRendaMensal(resultSet.getDouble("rendamensal"));
 		}
 		
 		return modelLogin;
@@ -495,8 +514,107 @@ public class DAOUsuarioRepository {
 			modelLogin.setBairro(resultSet.getString("bairro"));
 			modelLogin.setLocalidade(resultSet.getString("localidade"));
 			modelLogin.setUf(resultSet.getString("uf"));
+			
+			modelLogin.setDataNascimento(resultSet.getDate("datanascimento"));
+			
+			modelLogin.setRendaMensal(resultSet.getDouble("rendamensal"));
 		}
 		
 		return modelLogin;
+	}
+	
+	//11º Método de Consulta - Consulta Para Imprimir da Tela Relatório
+	public List<ModelLogin> consultaUsuarioListRelatorio(Long userLogado) throws Exception{
+		
+		List<ModelLogin> retorno = new ArrayList<ModelLogin>();
+		
+		String sql = "select * from model_login where useradmin is false and usuario_id = " + userLogado;
+		PreparedStatement statement = connection.prepareStatement(sql);
+		
+		ResultSet resultado = statement.executeQuery();
+		
+		while(resultado.next()){
+			
+			ModelLogin modelLogin = new ModelLogin();
+			
+			modelLogin.setEmail(resultado.getString("email"));
+			modelLogin.setId(resultado.getLong("id"));
+			modelLogin.setLogin(resultado.getString("login"));
+			modelLogin.setNome(resultado.getString("nome"));
+			modelLogin.setSenha(resultado.getString("senha"));
+			modelLogin.setPerfil(resultado.getString("perfil"));
+			modelLogin.setSexo(resultado.getString("sexo"));
+			
+			modelLogin.setTelefones(this.listaTelefone(modelLogin.getId()));
+			
+			retorno.add(modelLogin);
+			
+		}
+		
+		return retorno;		
+	}
+	
+	
+	//Polimorfismo da classe acima
+	public List<ModelLogin> consultaUsuarioListRelatorio(Long userLogado, String dataInicial, String dataFinal) throws Exception {
+
+		List<ModelLogin> retorno = new ArrayList<ModelLogin>();
+
+		String sql = "select * from model_login where useradmin is false and usuario_id = " + userLogado + "and datanascimento >= ? and datanascimento <= ?";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setDate(1, Date.valueOf(new SimpleDateFormat("yyyy-mm-dd").format(new SimpleDateFormat("dd/mm/yyyy").parse(dataInicial))));
+		statement.setDate(2, Date.valueOf(new SimpleDateFormat("yyyy-mm-dd").format(new SimpleDateFormat("dd/mm/yyyy").parse(dataFinal))));
+
+		ResultSet resultado = statement.executeQuery();
+
+		while (resultado.next()) {
+
+			ModelLogin modelLogin = new ModelLogin();
+
+			modelLogin.setEmail(resultado.getString("email"));
+			modelLogin.setId(resultado.getLong("id"));
+			modelLogin.setLogin(resultado.getString("login"));
+			modelLogin.setNome(resultado.getString("nome"));
+			modelLogin.setSenha(resultado.getString("senha"));
+			modelLogin.setPerfil(resultado.getString("perfil"));
+			modelLogin.setSexo(resultado.getString("sexo"));
+			
+			modelLogin.setTelefones(this.listaTelefone(modelLogin.getId()));
+
+			retorno.add(modelLogin);
+
+		}
+
+		return retorno;
+	}
+	
+	//12º Método de Consulta - Consulta de Telefone para o Relatório do Usuário
+	public List<ModelTelefone> listaTelefone(Long idUserPai) throws Exception {
+		
+		List<ModelTelefone> retorno = new ArrayList<ModelTelefone>();
+		
+		String sql = "select * from telefone where usuario_pai_id = ?";
+		
+		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		
+		preparedStatement.setLong(1, idUserPai);
+		
+		ResultSet rs = preparedStatement.executeQuery();
+		
+		while(rs.next()) {
+			
+			ModelTelefone modelTelefone = new ModelTelefone();
+			
+			modelTelefone.setId(rs.getLong("id"));
+			modelTelefone.setNumero(rs.getString("numero"));
+			modelTelefone.setUsuario_cad_id(this.consultaUsuarioIDTelefone(rs.getLong("usuario_cad_id")));
+			modelTelefone.setUsuario_pai_id(this.consultaUsuarioIDTelefone(rs.getLong("usuario_pai_id")));
+			
+			retorno.add(modelTelefone);
+						
+		}
+		
+		return retorno;
+		
 	}
 }

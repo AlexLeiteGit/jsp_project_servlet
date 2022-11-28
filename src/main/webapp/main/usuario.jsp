@@ -138,10 +138,11 @@
 												<c:if test="${modelLogin.fotouser != '' && modelLogin.fotouser != null}">
 													<a href="<%= request.getContextPath()%>/ServletUsuarioController?acao=downloadFoto&id=${modelLogin.id}">
 													<img alt="Imagem User" id="fotoembase64" src="${modelLogin.fotouser}" width="70px">
+													</a>
 												</c:if>
 												
 												<c:if test="${modelLogin.fotouser == '' || modelLogin.fotouser == null}">
-													<img alt="Imagem User" id="fotoembase64" src="assets/images/avatar-5.jpg" width="70px">
+													<img alt="Imagem User" id="fotoembase64" src="assets/images/usuario_padrao.png" width="70px">
 												</c:if>
 											</div>
 											<input type="file" id="fileFoto" name="fileFoto" accept="image/*" onchange="visualizarImg('fotoembase64', 'fileFoto');" class="form-control-file" style="margin-top: 15px; margin-left: 5px;">
@@ -221,6 +222,12 @@
 											<input type="text" name="uf" id="uf" class="form-control" required="required" autocomplete="off" value="${modelLogin.uf}"> 
 											<span class="form-bar"></span> 
 											<label class="float-label">UF:</label>
+										</div>
+										
+										<div class="form-group form-default form-static-label">
+											<input type="text" name="rendaMensal" id="rendaMensal" class="form-control" required="required" value="${modelLogin.rendaMensal}"> 
+											<span class="form-bar"></span>
+											<label class="float-label">Renda Mensal:</label>
 										</div>
                                            
                                         <button class="btn btn-out-dashed waves-effect waves-light btn-primary btn-square" onclick="limparForm();">Novo</button>
@@ -348,6 +355,14 @@
      <!-- Final do Modal -->
     
 <script type="text/javascript">
+
+	var dataNascimento = $("#dataNascimento").val();
+	
+	var dateFormat = new Date(dataNascimento);
+	
+	$("#dataNascimento").val(dateFormat.toLocaleDateString('pt-BR',{timeZone: 'UTC'}));
+	
+	$("#nome").focus();
 
 	<!-- Método de Formatação de Data de Nascimento -->
 	$( function() {
