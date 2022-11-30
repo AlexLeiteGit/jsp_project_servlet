@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import model.ModelLogin;
+import util.ReportUtil;
 
 @MultipartConfig
 @WebServlet(urlPatterns = {"/ServletUsuarioController"})
@@ -169,7 +170,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				String dataInicial = request.getParameter("dataInicial");
 				String dataFinal = request.getParameter("dataFinal");
 				
-				System.out.println("Tudo funcionando corretamente até agora!!!!!");
+				System.out.println("Tudo funcionando corretamente ate agora!");
 				
 				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()){
 					
@@ -184,6 +185,28 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				request.setAttribute("dataInicial", dataInicial);
 				request.setAttribute("dataFinal", dataFinal);
 				request.getRequestDispatcher("main/reluser.jsp").forward(request, response);
+				
+			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("imprimirRelatorioPDF")) {
+				
+				String dataInicial = request.getParameter("dataInicial");
+				String dataFinal = request.getParameter("dataFinal");
+				
+				List<ModelLogin> modelLogins = null;
+				
+				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()){
+					
+					modelLogins = daoUsuarioRepository.consultaUsuarioListRelatorio(super.getUserLogado(request));
+					
+				} else {
+					
+					modelLogins = daoUsuarioRepository.consultaUsuarioListRelatorio(super.getUserLogado(request), dataInicial, dataFinal);
+					
+				}
+				
+				byte[] relatorio = new ReportUtil().geraRelatorioPDF(modelLogins, "relatorio-usuario-jsp", request.getServletContext());
+				
+				response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
+				response.getOutputStream().write(relatorio);
 				
 			} else {
 				

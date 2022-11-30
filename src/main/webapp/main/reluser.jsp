@@ -49,7 +49,7 @@
 												
 												<form class="form-material" action="<%= request.getContextPath()%>/ServletUsuarioController?acao=imprimirRelatorioUser" method="get" id="formUser">
 
-														<input type="hidden" name="acao" value="imprimirRelatorioUser">
+														<input type="hidden" id="acaoRelatorioImprimirTipo" name="acao" value="imprimirRelatorioUser">
 
 															<div class="form-row align-items-center">
 																
@@ -64,7 +64,11 @@
 																</div>
 
 																<div class="col-auto my-1">
-																	<button type="submit" class="btn btn-primary">Imprimir Relatório</button>
+																	<button type="button" onclick="mostrarHtml();" class="btn btn-primary">Mostrar Relatório</button>
+																</div>
+																
+																<div class="col-auto my-1">
+																	<button type="button" onclick="imprimirPdf();" class="btn btn-primary">Imprimir Relatório</button>
 																</div>
 															</div>
 
@@ -146,6 +150,21 @@
 			    prevText: 'Anterior'
 			});
 	} );
+	
+	function mostrarHtml() {
+		
+		document.getElementById("acaoRelatorioImprimirTipo").value = 'imprimirRelatorioUser';
+		$("#formUser").submit();
+		
+	}
+	
+	function imprimirPdf() {
+		
+		document.getElementById("acaoRelatorioImprimirTipo").value = 'imprimirRelatorioPDF';
+		$("#formUser").submit();
+		return false;
+		
+	}
 
 
 </script>
