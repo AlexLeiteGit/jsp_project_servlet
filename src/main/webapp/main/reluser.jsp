@@ -65,10 +65,8 @@
 
 																<div class="col-auto my-1">
 																	<button type="button" onclick="mostrarHtml();" class="btn btn-primary">Mostrar Relatório</button>
-																</div>
-																
-																<div class="col-auto my-1">
 																	<button type="button" onclick="imprimirPdf();" class="btn btn-primary">Imprimir Relatório</button>
+																	<button type="button" onclick="imprimirExcel();" class="btn btn-primary">Imprimir em Excel</button>
 																</div>
 															</div>
 
@@ -166,6 +164,13 @@
 		
 	}
 
+	function imprimirExcel() {
+		
+		document.getElementById("acaoRelatorioImprimirTipo").value = 'imprimirRelatorioExcel';
+		$("#formUser").submit();
+		return false;
+		
+	}
 
 </script>
     
