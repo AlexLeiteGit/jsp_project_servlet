@@ -1,8 +1,10 @@
 package servlets;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.tomcat.jakartaee.commons.compress.utils.IOUtils;
@@ -203,7 +205,10 @@ public class ServletUsuarioController extends ServletGenericUtil {
 					
 				}
 				
-				byte[] relatorio = new ReportUtil().geraRelatorioPDF(modelLogins, "relatorio-usuario-jsp", request.getServletContext());
+				HashMap<String, Object> params = new HashMap<String, Object>();
+				params.put("PARAM_SUB_REPORT", request.getServletContext().getRealPath("relatorio") + File.separator);
+				
+				byte[] relatorio = new ReportUtil().geraRelatorioPDF(modelLogins, "relatorio-usuario-jsp", params, request.getServletContext());
 				
 				response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
 				response.getOutputStream().write(relatorio);
